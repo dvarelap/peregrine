@@ -1,7 +1,6 @@
-package com.twitter.com.github.dvarelap.stilt
+package com.github.dvarelap.stilt
 
-import com.github.dvarelap.stilt.{Controller, StiltServer}
-import com.twitter.com.github.dvarelap.stilt.test.FlatSpecHelper
+import com.github.dvarelap.stilt.test.FlatSpecHelper
 import com.twitter.util.Future
 
 class ErrorHandlerSpec extends FlatSpecHelper {

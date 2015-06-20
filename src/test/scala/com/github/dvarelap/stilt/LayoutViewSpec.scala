@@ -13,8 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.com.github.dvarelap.stilt
+package com.github.dvarelap.stilt
 
-import org.scalatest.{FlatSpec, Matchers}
-
-class ShouldSpec extends FlatSpec with Matchers
+class LayoutViewSpec extends ShouldSpec {
+//  "A LayoutView" should "render" in {
+//
+//    val posts   = List(new Post("One"), new Post("Two"))
+//    val layout  = new PostsView(posts)
+//
+//    layout.render should include ("Posts")
+//    layout.render should include ("Title: One")
+//  }
+}

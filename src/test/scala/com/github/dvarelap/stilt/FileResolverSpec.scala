@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.com.github.dvarelap.stilt.test
+package com.github.dvarelap.stilt
 
-import com.github.dvarelap.stilt.SpecHelper
-import org.scalatest.{FlatSpec, Matchers}
+class FileResolverSpec extends ShouldSpec {
 
-trait FlatSpecHelper extends FlatSpec with Matchers with SpecHelper
+  "FileResolverSpec" should "detect a directory" in {
+    FileResolver.hasLocalDirectory("public/components") should be(true)
+  }
+}

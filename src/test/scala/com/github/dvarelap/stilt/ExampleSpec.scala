@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.com.github.dvarelap.stilt
+package com.github.dvarelap.stilt
 
-import com.github.dvarelap.stilt._
 import com.github.dvarelap.stilt.ContentType._
-import com.twitter.com.github.dvarelap.stilt.test.FlatSpecHelper
+import com.github.dvarelap.stilt.test.FlatSpecHelper
 
 /* This test is used as the base for generating the
  README.markdown, all new generated apps, and the finatra_example repo

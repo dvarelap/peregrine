@@ -1,6 +1,5 @@
 package com.github.dvarelap.stilt
 
-import com.github.dvarelap.stilt.jackson.DefaultJacksonJsonSerializer
 import org.jboss.netty.buffer.ChannelBuffer
 import org.jboss.netty.handler.codec.http._
 import org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1

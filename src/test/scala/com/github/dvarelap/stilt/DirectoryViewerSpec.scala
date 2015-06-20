@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.com.github.dvarelap.stilt
-
-import com.github.dvarelap.stilt.{DirectoryViewer, FileResolver}
+package com.github.dvarelap.stilt
 
 class DirectoryViewerSpec extends ShouldSpec {
 

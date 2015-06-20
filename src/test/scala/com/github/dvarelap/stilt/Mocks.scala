@@ -13,18 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.com.github.dvarelap.stilt
+package com.github.dvarelap.stilt
 
-import com.github.dvarelap.stilt.FileService
+//import com.github.dvarelap.stilt.View
+//
+//case class Post(title: String)
 
-class FileSpec extends ShouldSpec {
-
-  "looking up .json" should "recognize application/json" in {
-    FileService.getContentType(".json") should equal("application/json")
-  }
-
-  "looking up .nonsense" should "default to application/octet-stream" in {
-    FileService.getContentType(".nonsense") should equal("application/octet-stream")
-  }
-
-}
+//class PostsListView(val posts:List[Post]) extends View {
+//  val template  = "posts.mustache"
+//  val contentType   = Some("text/plain")
+//}
+//
+//class PostsView(val posts:List[Post]) extends View {
+//  val template      = "posts_layout.mustache"
+//  val postsListView = new PostsListView(posts)
+//
+//  def body          = postsListView.render
+//}
+//
+//class MasterView extends View {
+//  val template = "master.mustache"
+//  val body = "please <escape> me"
+//}

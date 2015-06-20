@@ -13,25 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.com.github.dvarelap.stilt
+package com.github.dvarelap.stilt.test
 
-//import com.github.dvarelap.stilt.View
-//
-//case class Post(title: String)
+import com.github.dvarelap.stilt.SpecHelper
+import org.scalatest.{FlatSpec, Matchers}
 
-//class PostsListView(val posts:List[Post]) extends View {
-//  val template  = "posts.mustache"
-//  val contentType   = Some("text/plain")
-//}
-//
-//class PostsView(val posts:List[Post]) extends View {
-//  val template      = "posts_layout.mustache"
-//  val postsListView = new PostsListView(posts)
-//
-//  def body          = postsListView.render
-//}
-//
-//class MasterView extends View {
-//  val template = "master.mustache"
-//  val body = "please <escape> me"
-//}
+trait FlatSpecHelper extends FlatSpec with Matchers with SpecHelper

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.com.github.dvarelap.stilt
+package com.github.dvarelap.stilt
 
-import com.github.dvarelap.stilt.{Controller, StiltServer}
-import com.twitter.com.github.dvarelap.stilt.test.FlatSpecHelper
+import com.github.dvarelap.stilt.test.FlatSpecHelper
 import com.twitter.finagle.http.Cookie
 import org.jboss.netty.handler.codec.http.DefaultCookie
 

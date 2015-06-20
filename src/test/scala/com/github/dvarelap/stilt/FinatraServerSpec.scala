@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.com.github.dvarelap.stilt
+package com.github.dvarelap.stilt
 
-import com.github.dvarelap.stilt.{Controller, StiltServer}
-import com.twitter.com.github.dvarelap.stilt.test.FlatSpecHelper
-import com.twitter.finagle.{Service, SimpleFilter}
-import com.twitter.finagle.http.{Request, Response}
+import com.github.dvarelap.stilt.test.FlatSpecHelper
+import com.twitter.finagle.http.Response
+import com.twitter.finagle.{Service, SimpleFilter, http}
 import com.twitter.util.Future
 
 class TestApp extends Controller {
@@ -29,9 +28,9 @@ class TestApp extends Controller {
 
 }
 
-class TestFilter extends SimpleFilter[Request, Response] {
+class TestFilter extends SimpleFilter[http.Request, Response] {
 
-  def apply(request: Request, service: Service[Request, Response]): Future[Response] = {
+  def apply(request: http.Request, service: Service[http.Request, Response]): Future[Response] = {
     service(request) map { response =>
        response.setContentString("hello from filter")
        response

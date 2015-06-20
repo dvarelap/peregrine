@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.com.github.dvarelap.stilt
+package com.github.dvarelap.stilt
 
-import com.github.dvarelap.stilt.FileService
 import com.twitter.finagle.http.service.NullService
 import com.twitter.finagle.http.{Request => FinagleRequest}
 import com.twitter.util.Await

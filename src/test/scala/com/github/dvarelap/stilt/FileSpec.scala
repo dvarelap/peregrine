@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.com.github.dvarelap.stilt
+package com.github.dvarelap.stilt
 
-class LayoutViewSpec extends ShouldSpec {
-//  "A LayoutView" should "render" in {
-//
-//    val posts   = List(new Post("One"), new Post("Two"))
-//    val layout  = new PostsView(posts)
-//
-//    layout.render should include ("Posts")
-//    layout.render should include ("Title: One")
-//  }
+class FileSpec extends ShouldSpec {
+
+  "looking up .json" should "recognize application/json" in {
+    FileService.getContentType(".json") should equal("application/json")
+  }
+
+  "looking up .nonsense" should "default to application/octet-stream" in {
+    FileService.getContentType(".nonsense") should equal("application/octet-stream")
+  }
+
 }

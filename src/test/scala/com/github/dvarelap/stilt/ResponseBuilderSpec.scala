@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.twitter.com.github.dvarelap.stilt
+package com.github.dvarelap.stilt
 
+import com.twitter.finagle.http.Status
 import org.jboss.netty.buffer.ChannelBuffers
 import org.jboss.netty.util.CharsetUtil.UTF_8
-
-import com.github.dvarelap.stilt.ResponseBuilder
-import com.github.dvarelap.stilt.View
-import com.twitter.finagle.http.Status
 
 class MockView(val title: String) extends View {
   val template = "mock.mustache"
