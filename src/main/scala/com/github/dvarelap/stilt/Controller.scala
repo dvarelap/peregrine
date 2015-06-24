@@ -1,5 +1,6 @@
 package com.github.dvarelap.stilt
 
+import com.github.dvarelap.stilt.jackson.DefaultJacksonJsonSerializer
 import com.twitter.app.App
 import com.twitter.server.Stats
 import com.twitter.util.Future
