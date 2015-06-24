@@ -69,7 +69,7 @@ class ResponseBuilderSpec extends ShouldSpec {
   ".json()" should "return a 200 json response" in {
     val response = resp.json(Map("foo" -> "bar"))
     val built = response.build
-    val body = built.getContent.toString(UTF_8)
+    val body = built.getContent().toString(UTF_8)
 
     built.statusCode should equal(200)
     body should equal( """{"foo":"bar"}""")

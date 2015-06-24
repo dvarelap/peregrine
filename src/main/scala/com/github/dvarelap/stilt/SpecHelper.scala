@@ -9,10 +9,10 @@ import scala.collection.Map
 
 class MockResponse(val originalResponse: FinagleResponse) {
 
-  def status                  = originalResponse.getStatus
-  def code                    = originalResponse.getStatus.getCode
-  def body                    = originalResponse.getContent.toString(UTF_8)
-  def getHeader(name: String) = originalResponse.headers.get(name)
+  def status                  = originalResponse.getStatus()
+  def code                    = originalResponse.getStatus().getCode
+  def body                    = originalResponse.getContent().toString(UTF_8)
+  def getHeader(name: String) = originalResponse.headers().get(name)
   def getHeaders              = originalResponse.headerMap
 
 }

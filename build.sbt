@@ -9,10 +9,14 @@ resolvers += "Twitter" at "http://maven.twttr.com"
 
 scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation")
 
+// still in beta so it's only being published to local repo
+publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath+"/.m2/repository")))
+
 lazy val stilt = (project in file(".")).
   settings(
+    organization := "com.github.dvarelap",
     name := "stilt",
-    version := "0.0.1",
+    version := "0.1.0",
     scalaVersion := "2.11.6",
     libraryDependencies ++= Seq(
 			twitterServer,
