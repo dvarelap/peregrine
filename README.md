@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/dvarelap/stilt](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dvarelap/stilt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## Current Version - 0.0.1
+## Current Version - 0.1.0
 
 **Stilt** is a fast & thin Scala web framework inspired by Sinatra and powered by Twitter-Server
 
@@ -35,7 +35,7 @@ object MyServer extends StiltServer {
 <dependency>
   <groupId>com.github.dvarelap</groupId>
   <artifactId>stilt_2.11</artifactId>
-  <version>0.0.1</version>
+  <version>0.1.0</version>
 </dependency>
 ```
 ## What is gone?
