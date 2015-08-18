@@ -8,7 +8,7 @@
 **Stilt** is a fast & thin Scala web framework inspired by Sinatra and powered by Twitter-Server
 
 ***Note:*** this is a framework based on finatra 1.x.x. Why?, well since finatra 2.0.0-M1 it's not simple as it should be to write a simple and fast web app, so I decided to take a different path based on this awesome project and keep it the Sinatra way.
-      
+
 Here a small app
 ```scala
 import com.github.dvarelap.stilt._
@@ -27,16 +27,16 @@ object MyServer extends StiltServer {
 ```
 
 ## Quick Start
-### SBT 
+### SBT
 ```scala
- "com.github.dvarelap" %% "stilt" % "0.0.1"
+ "com.github.dvarelap" %% "stilt" % "1.0.1"
  ```
 ### Maven
 ```xml
 <dependency>
   <groupId>com.github.dvarelap</groupId>
   <artifactId>stilt_2.11</artifactId>
-  <version>0.1.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 ## What is gone?
@@ -49,10 +49,10 @@ TODO: sample here.
 - Session support
 - CSRF protection
 
-## Want to join the trip? 
+## Want to join the trip?
 
 
-## Licence 
+## Licence
 
 Copyright 2015 Daniel Varela and other contributors.
 
