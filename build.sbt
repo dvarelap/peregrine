@@ -9,17 +9,18 @@ resolvers += "Twitter" at "http://maven.twttr.com"
 
 scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation")
 
-// still in beta so it's only being published to local repo
-publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath+"/.m2/repository")))
-
-lazy val stilt = (project in file(".")).
-  settings(
+lazy val stilt = (project in file("."))
+  .settings(
+    version in ThisBuild := "1.0.1",
     organization := "com.github.dvarelap",
     name := "stilt",
-    version := "0.1.0",
-    scalaVersion := "2.11.6",
+    version := "1.0.1",
+    scalaVersion := "2.11.7",
+    licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
+    publishMavenStyle := true,
+    bintrayOrganization in bintray := None,
     libraryDependencies ++= Seq(
-			twitterServer,
+		twitterServer,
     	scalaTest,
     	findbugs,
     	jacksonScala,
@@ -27,13 +28,3 @@ lazy val stilt = (project in file(".")).
       jacksonDatabind
     )
   )
-
-
-
-
-
-
-
-
-
-
