@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2012 Twitter Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.github.dvarelap.stilt
 
 import com.github.dvarelap.stilt.ContentType._
@@ -267,7 +252,7 @@ class ExampleSpec extends FlatSpecHelper {
 
   "GET /index.html" should "respond 200" in {
     get("/")
-    response.body.contains("Finatra - The scala web framework") should equal(true)
+    response.body.contains("Stilt - The scala web framework") should equal(true)
     response.code should equal(200)
   }
 
@@ -324,7 +309,7 @@ class ExampleSpec extends FlatSpecHelper {
 
   "GET /go_home" should "render same as /" in {
     get("/go_home")
-    response.body.contains("Finatra - The scala web framework") should equal(true)
+    response.body.contains("Stilt - The scala web framework") should equal(true)
     response.code should equal(200)
   }
 

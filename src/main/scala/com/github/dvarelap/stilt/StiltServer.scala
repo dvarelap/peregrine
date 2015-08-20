@@ -28,14 +28,18 @@ class StiltServer extends TwitterServer {
     filters.foldRight(baseService) { (b,a) => b andThen a }
   }
 
-  def register(app: Controller) { controllers.add(app) }
+  def register(controller: Controller, pathPrefix: String = "") {
+    controller.withPrefix(pathPrefix)
+    controllers.add(controller)
+    println(controller.routes.vector)
+  }
 
   def addFilter(filter: Filter[FinagleRequest, FinagleResponse,FinagleRequest, FinagleResponse]) {
     filters = filters ++ Seq(filter)
   }
 
   def main() {
-    log.info("finatra process " + pid + " started")
+    log.info("stilt process " + pid + " started")
     start()
   }
 
@@ -151,9 +155,3 @@ class StiltServer extends TwitterServer {
 
   }
 }
-
-
-
-
-
-

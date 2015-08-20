@@ -8,7 +8,7 @@ import org.jboss.netty.handler.codec.http._
 
 class Controller extends App with Stats {
 
-  val routes                     = new RouteVector[(HttpMethod, String, PathPattern, Request => Future[ResponseBuilder])]
+  val routes                     = new RouteVector
   val stats                      = statsReceiver.scope("Controller")
   var serializer: JsonSerializer = DefaultJacksonJsonSerializer
 
@@ -44,29 +44,26 @@ class Controller extends App with Stats {
       val mime        = FileService.getContentType("." + format)
       val contentType = ContentType(mime).getOrElse(new ContentType.All)
 
-      if (callback.isDefinedAt(contentType)) {
-        callback(contentType)
-      } else {
-        throw new UnsupportedMediaType
-      }
+      if (callback.isDefinedAt(contentType)) callback(contentType)
+      else throw new UnsupportedMediaType
+
     } else {
-      r.accepts.find { mimeType =>
-        callback.isDefinedAt(mimeType)
-      } match {
-        case Some(contentType) =>
-          callback(contentType)
-        case None =>
-          throw new UnsupportedMediaType
+      val contentTypeMaybe = r.accepts.find(mimeType => callback.isDefinedAt(mimeType))
+      contentTypeMaybe match {
+        case Some(contentType) => callback(contentType)
+        case None              => throw new UnsupportedMediaType
       }
     }
   }
 
   def addRoute(method: HttpMethod, path: String)(callback: Request => Future[ResponseBuilder]) {
     val regex = SinatraPathPatternParser(path)
-    routes.add((method, path, regex, (r) => {
+    routes.add(Route(method, path, regex, (r) => {
       stats.timeFuture("%s/Root/%s".format(method.toString, path.stripPrefix("/"))) {
         callback(r)
       }
     }))
   }
+
+  private[stilt] def withPrefix(prefix: String) = routes.withPrefix(prefix)
 }

@@ -29,7 +29,7 @@ class Router(controller: Controller) {
     val req = RequestAdapter(request)
 
     findRouteAndMatch(req, method) match {
-      case Some((_method, definition, pattern, callback)) =>
+      case Some(Route(_method, definition, pattern, callback)) =>
         val response = callback(req).rescue {
           case e if controller.errorHandler.isDefined => req.error = Some(e); controller.errorHandler.get(req)
         }
@@ -44,11 +44,9 @@ class Router(controller: Controller) {
     request.routeParams += (decodedKey -> decodedValue)
   }
 
-  def findRouteAndMatch(request: Request, method: HttpMethod):
-  Option[(HttpMethod, String, PathPattern, (Request) => Future[ResponseBuilder])] = {
-
+  def findRouteAndMatch(request: Request, method: HttpMethod):Option[Route] = {
     controller.routes.vector.find {
-      case (_method, definition, pattern, callback) =>
+      case Route(_method, definition, pattern, callback) =>
         pattern(request.path.split('?').head) match {
           case Some(theMatch) if _method == method => theMatch.foreach((xs: (_, _)) => extractParams(request, xs)); true
           case _                                   => false
@@ -74,7 +72,7 @@ class Router(controller: Controller) {
     val req = new Request(finagleRequest)
 
     findRouteAndMatch(req, method) match {
-      case Some((_method, definition, pattern, callback)) =>
+      case Some(Route(_method, definition, pattern, callback)) =>
         callback(req)
           .rescue {
           case e if(controller.errorHandler.isDefined) => req.error = Some(e);controller.errorHandler.get(req)

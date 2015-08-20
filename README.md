@@ -13,7 +13,7 @@ Here a small app
 ```scala
 import com.github.dvarelap.stilt._
 
-class HelloController extends Controller {
+class HelloController(prefix: String) extends Controller(prefix) {
 
   get("/hello/:name") { request =>
     val name = request.routeParams.getOrElse("name", "nothing")
