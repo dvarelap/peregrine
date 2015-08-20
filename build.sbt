@@ -11,10 +11,10 @@ scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation")
 
 lazy val stilt = (project in file("."))
   .settings(
-    version in ThisBuild := "1.0.1",
+    version in ThisBuild := "1.0.2",
     organization := "com.github.dvarelap",
     name := "stilt",
-    version := "1.0.1",
+    version := "1.0.2",
     scalaVersion := "2.11.7",
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
     publishMavenStyle := true,
