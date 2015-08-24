@@ -10,10 +10,6 @@ class CsrfFilter extends SimpleFilter[FinagleRequest, FinagleResponse] with Sess
   private val logger: Logger = Logger.get("stilt")
 
   def apply(req: FinagleRequest, service: Service[FinagleRequest, FinagleResponse]): Future[FinagleResponse] = {
-    println("_aut=" + req.cookies.getOrElse("_authenticity_token", buildVoidCookie).value)
-    println("parm=" + req.params.getOrElse("_csrf_token", ""))
-    println("gen=" + generateToken)
-
     if (req.method == HttpMethod.GET) {
       service(req)
     } else {
