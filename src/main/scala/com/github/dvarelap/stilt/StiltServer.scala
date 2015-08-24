@@ -31,7 +31,6 @@ class StiltServer extends TwitterServer {
   def register(controller: Controller, pathPrefix: String = "") {
     controller.withPrefix(pathPrefix)
     controllers.add(controller)
-    println(controller.routes.vector)
   }
 
   def addFilter(filter: Filter[FinagleRequest, FinagleResponse,FinagleRequest, FinagleResponse]) {
