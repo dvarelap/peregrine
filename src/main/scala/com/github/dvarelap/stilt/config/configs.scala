@@ -5,7 +5,7 @@ import com.twitter.app.GlobalFlag
 object port            extends GlobalFlag[String](":7070", "Http Port")
 object adminPort       extends GlobalFlag[String](":9999", "Admin/Stats Port")
 object sslPort         extends GlobalFlag[String](":7443", "Https Port")
-object env             extends GlobalFlag[String]("development", "Environment")
+object env             extends GlobalFlag[String]("dev", "Environment {dev |test | prod }")
 object pidEnabled      extends GlobalFlag[Boolean](false, "whether to write pid file")
 object pidPath         extends GlobalFlag[String]("", "path to pid file")
 object logPath         extends GlobalFlag[String]("logs/stilt.log", "path to log")

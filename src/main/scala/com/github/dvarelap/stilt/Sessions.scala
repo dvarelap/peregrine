@@ -61,6 +61,7 @@ trait Session {
   def get[T](key: String): Future[Option[T]]
   def put[T](key: String, value: T, expiresIn: Seconds = 3600000): Future[Unit]
   def del(key: String): Future[Unit]
+  def getOrElseUpdate[T](key: String, value: T): Future[T]
 }
 
 class CookieBasedSession(val sessionId: String) extends Session {
@@ -70,6 +71,10 @@ class CookieBasedSession(val sessionId: String) extends Session {
   override def get[T](key: String): Future[Option[T]] = Future(values.get(key).map(_.asInstanceOf[T]))
   override def put[T](key: String, value: T, expiresIn: Seconds = 3600000): Future[Unit] = Future(values.put(key, value))
   override def del(key: String): Future[Unit] = Future(values.remove(key))
+  override def getOrElseUpdate[T](key: String, value: T):Future[T] = get(key).flatMap {
+    case Some(t) => Future(t)
+    case None    => put(key, value).map(_ => value)
+  }
 }
 
 private[this] object CookieSessionsHolder {
@@ -82,7 +87,7 @@ private[this] object CookieSessionsHolder {
   def getOrElseUpdate(id: String, session: CookieBasedSession) = sessions.getOrElseUpdate(id, session)
 }
 
-private[this] object IdGenerator {
+private[stilt] object IdGenerator {
 
   import java.security.SecureRandom
 
