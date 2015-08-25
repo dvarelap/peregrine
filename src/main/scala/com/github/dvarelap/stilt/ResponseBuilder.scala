@@ -47,7 +47,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
     val jsonBytes = jsonSerializer.serialize(json)
     _setContentForBinary(resp, jsonBytes)
   }
-  
+
   private def _setContentView(resp: HttpResponse, view: View): Unit = {
     val out = view.render
     val bytes = out.getBytes(UTF_8)
@@ -186,7 +186,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
       this.header("Content-Type", mtype)
       this.body(bytes)
     } else {
-      throw new IllegalArgumentException("File does not exist")
+      throw new IllegalArgumentException(s"File does not exist ${fullAssetPath}")
     }
 
     this
@@ -254,4 +254,3 @@ trait CommonStatuses { self: ResponseBuilder =>
   }
 
 }
-

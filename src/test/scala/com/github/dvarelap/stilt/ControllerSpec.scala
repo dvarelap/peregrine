@@ -15,6 +15,10 @@ class ControllerSpec extends FlatSpecHelper {
     get("/test") { req =>
       render.plain("success").toFuture
     }
+
+    get("/foo", "/bar", "/zoo") { req =>
+      render.plain("three results").toFuture
+    }
   }
 
   val server = new StiltServer
@@ -28,6 +32,20 @@ class ControllerSpec extends FlatSpecHelper {
   "GET /api/test" should "respond 200" in {
     get("/api/test")
     response.body   should equal ("success")
+    response.code   should equal (200)
+  }
+
+  "multiple paths" should "should work as expected" in {
+    get("/api/foo")
+    response.body   should equal ("three results")
+    response.code   should equal (200)
+
+    get("/api/bar")
+    response.body   should equal ("three results")
+    response.code   should equal (200)
+
+    get("/api/zoo")
+    response.body   should equal ("three results")
     response.code   should equal (200)
   }
 }
