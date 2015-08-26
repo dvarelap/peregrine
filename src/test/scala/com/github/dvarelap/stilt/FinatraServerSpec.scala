@@ -26,7 +26,7 @@ class TestFilter extends SimpleFilter[http.Request, Response] {
 
 class FinatraServerSpec extends FlatSpecHelper {
 
-  val server = new peregrineServer
+  val server = new PeregrineServer
   server.register(new TestApp)
 
   "app" should "register" in {

@@ -28,7 +28,7 @@ class RequestResponseSpec extends FlatSpecHelper {
     }
   }
 
-  val server = new peregrineServer
+  val server = new PeregrineServer
   server.register(new ExampleApp)
 
   "Response" should "be tied to the request" in {

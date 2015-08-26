@@ -22,7 +22,7 @@ trait SpecHelper {
   def response  = new MockResponse(Await.result(lastResponse))
   var lastResponse: Future[FinagleResponse] = null
 
-  def server: peregrineServer
+  def server: PeregrineServer
 
   def get(path:String, params:Map[String,String]=Map(), headers:Map[String,String]=Map()) {
     executeRequest(HttpMethod.GET,path,params,headers)

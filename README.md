@@ -21,7 +21,7 @@ class HelloController(prefix: String) extends Controller(prefix) {
   }
 }
 
-object MyServer extends peregrineServer {
+object MyServer extends PeregrineServer {
   register(new HelloController())
 }
 ```

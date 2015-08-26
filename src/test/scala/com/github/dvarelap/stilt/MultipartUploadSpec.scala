@@ -20,7 +20,7 @@ class MultipartUploadSpec extends FlatSpecHelper {
 
   }
 
-  val server = new peregrineServer
+  val server = new PeregrineServer
   server.register(new ExampleApp)
 
   "Multi part uploads with text and file fields" should "work" in {

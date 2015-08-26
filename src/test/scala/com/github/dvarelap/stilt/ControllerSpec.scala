@@ -21,7 +21,7 @@ class ControllerSpec extends FlatSpecHelper {
     }
   }
 
-  val server = new peregrineServer
+  val server = new PeregrineServer
   server.register(new TestController, "/api")
 
   "GET /test" should "respond 404" in {

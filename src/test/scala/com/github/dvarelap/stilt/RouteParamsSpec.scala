@@ -11,7 +11,7 @@ class RouteParamsSpec extends FlatSpecHelper {
     }
   }
 
-  val server = new peregrineServer
+  val server = new PeregrineServer
   server.register(new ExampleApp)
 
   "Response" should "contain decoded params" in {

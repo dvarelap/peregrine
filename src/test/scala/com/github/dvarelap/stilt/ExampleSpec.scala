@@ -227,7 +227,7 @@ class ExampleSpec extends FlatSpecHelper {
 
   /* ###END_APP### */
 
-  val server = new peregrineServer
+  val server = new PeregrineServer
   server.register(new ExampleApp)
 
   /* ###BEGIN_SPEC### */

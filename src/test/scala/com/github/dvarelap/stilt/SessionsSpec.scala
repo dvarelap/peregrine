@@ -5,7 +5,7 @@ import com.twitter.finagle.http.Cookie
 
 class SessionsSpec extends ShouldSpec with FlatSpecHelper {
 
-  override def server: peregrineServer = new peregrineServer {
+  override def server: PeregrineServer = new PeregrineServer {
     register(TestControllerWithSessions)
   }
 

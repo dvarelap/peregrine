@@ -144,12 +144,12 @@ object MockApp {
   }
 
   def apply(controller: Controller): MockApp = {
-    val server = new peregrineServer
+    val server = new PeregrineServer
     server.register(controller)
     apply(server)
   }
 
-  def apply(server: peregrineServer): MockApp = {
+  def apply(server: PeregrineServer): MockApp = {
     val appService = new AppService(server.controllers)
     val service = server.allFilters(appService)
 

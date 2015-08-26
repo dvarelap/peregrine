@@ -14,7 +14,7 @@ import com.twitter.server.TwitterServer
 import com.twitter.util.Await
 import com.twitter.conversions.storage._
 
-class peregrineServer extends TwitterServer {
+class PeregrineServer extends TwitterServer {
   val controllers:  ControllerCollection = new ControllerCollection
   var filters:      Seq[Filter[FinagleRequest, FinagleResponse,FinagleRequest, FinagleResponse]] = Seq.empty
   val pid:          String = ManagementFactory.getRuntimeMXBean.getName.split('@').head

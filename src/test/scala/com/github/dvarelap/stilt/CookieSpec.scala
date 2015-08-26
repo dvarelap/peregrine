@@ -20,7 +20,7 @@ class CookieApp extends Controller {
 
 class CookieSpec extends FlatSpecHelper {
 
-  val server = new peregrineServer
+  val server = new PeregrineServer
   server.register(new CookieApp)
 
   "basic k/v cookie" should "have Foo:Bar" in {

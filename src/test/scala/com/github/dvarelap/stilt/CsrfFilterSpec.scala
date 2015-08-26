@@ -5,7 +5,7 @@ import com.twitter.finagle.http.Cookie
 
 class CsrfFilterSpec extends ShouldSpec with FlatSpecHelper {
 
-  override def server: peregrineServer = new peregrineServer {
+  override def server: PeregrineServer = new PeregrineServer {
     addFilter(new CsrfFilter {
       override def generateToken = "TEST_TOKEN"
     })
