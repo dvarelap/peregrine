@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 class ViewSpec extends ShouldSpec {
 //  "A view" should "render" in {

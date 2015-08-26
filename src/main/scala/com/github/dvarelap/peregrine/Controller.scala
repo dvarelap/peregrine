@@ -1,6 +1,6 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
-import com.github.dvarelap.stilt.jackson.DefaultJacksonJsonSerializer
+import com.github.dvarelap.peregrine.jackson.DefaultJacksonJsonSerializer
 import com.twitter.app.App
 import com.twitter.server.Stats
 import com.twitter.util.Future
@@ -65,5 +65,5 @@ class Controller extends App with Stats {
     }))
   }
 
-  private[stilt] def withPrefix(prefix: String) = routes.withPrefix(prefix)
+  private[peregrine] def withPrefix(prefix: String) = routes.withPrefix(prefix)
 }

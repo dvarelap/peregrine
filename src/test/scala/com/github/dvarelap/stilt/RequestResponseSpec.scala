@@ -1,6 +1,6 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
-import com.github.dvarelap.stilt.test.FlatSpecHelper
+import com.github.dvarelap.peregrine.test.FlatSpecHelper
 import com.twitter.finagle.http.Cookie
 import org.jboss.netty.handler.codec.http.DefaultCookie
 
@@ -28,7 +28,7 @@ class RequestResponseSpec extends FlatSpecHelper {
     }
   }
 
-  val server = new StiltServer
+  val server = new peregrineServer
   server.register(new ExampleApp)
 
   "Response" should "be tied to the request" in {

@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 /**
  * lifted from https://github.com/scalatra/scalatra/blob/develop/core/src/main/scala/org/scalatra/pathPatternParsers.scala

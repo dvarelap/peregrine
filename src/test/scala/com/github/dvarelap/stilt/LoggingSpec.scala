@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 class LoggingSpec extends ShouldSpec {
 
@@ -12,19 +12,19 @@ class LoggingSpec extends ShouldSpec {
 //  }
 //
 //  "flag settings" should "work" in {
-//    System.setProperty("com.github.dvarelap.stilt.config.logLevel", "DEBUG")
+//    System.setProperty("com.github.dvarelap.peregrine.config.logLevel", "DEBUG")
 //    LevelFlaggable.parse(logLevel()) should equal(Level.INFO)
 //  }
 //
 //  "logLevel" should "respect flag settings" in {
 //    new TestApp {
-//      System.setProperty("com.github.dvarelap.stilt.config.logLevel", "DEBUG")
+//      System.setProperty("com.github.dvarelap.peregrine.config.logLevel", "DEBUG")
 //      LevelFlaggable.parse(logLevel()) should equal(Some(Level.DEBUG))
 //    }
 //  }
 //
 //  "logLevel" should "throw on a wrong level name" in {
-//    System.setProperty("com.github.dvarelap.stilt.config.logLevel", "Blah")
+//    System.setProperty("com.github.dvarelap.peregrine.config.logLevel", "Blah")
 //    a[IllegalArgumentException] should be thrownBy {
 //      new TestApp {
 //        val foo = LevelFlaggable.parse(logLevel())

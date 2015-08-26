@@ -1,6 +1,6 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
-import com.github.dvarelap.stilt.test.FlatSpecHelper
+import com.github.dvarelap.peregrine.test.FlatSpecHelper
 
 class RouteParamsSpec extends FlatSpecHelper {
 
@@ -11,7 +11,7 @@ class RouteParamsSpec extends FlatSpecHelper {
     }
   }
 
-  val server = new StiltServer
+  val server = new peregrineServer
   server.register(new ExampleApp)
 
   "Response" should "contain decoded params" in {

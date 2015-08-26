@@ -1,6 +1,6 @@
-package com.github.dvarelap.stilt.test
+package com.github.dvarelap.peregrine.test
 
-import com.github.dvarelap.stilt.{Controller, MockApp}
+import com.github.dvarelap.peregrine.{Controller, MockApp}
 import org.scalatest.{FlatSpec, Matchers}
 
 class SampleSpec extends FlatSpec with Matchers {

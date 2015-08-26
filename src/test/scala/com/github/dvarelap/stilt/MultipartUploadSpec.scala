@@ -1,6 +1,6 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
-import com.github.dvarelap.stilt.test.FlatSpecHelper
+import com.github.dvarelap.peregrine.test.FlatSpecHelper
 import com.twitter.finagle.http.{Request => FinagleRequest}
 import org.apache.commons.io.IOUtils
 
@@ -20,7 +20,7 @@ class MultipartUploadSpec extends FlatSpecHelper {
 
   }
 
-  val server = new StiltServer
+  val server = new peregrineServer
   server.register(new ExampleApp)
 
   "Multi part uploads with text and file fields" should "work" in {

@@ -1,7 +1,7 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
-import com.github.dvarelap.stilt.ContentType._
-import com.github.dvarelap.stilt.test.FlatSpecHelper
+import com.github.dvarelap.peregrine.ContentType._
+import com.github.dvarelap.peregrine.test.FlatSpecHelper
 
 /* This test is used as the base for generating the
  README.markdown, all new generated apps, and the finatra_example repo
@@ -227,7 +227,7 @@ class ExampleSpec extends FlatSpecHelper {
 
   /* ###END_APP### */
 
-  val server = new StiltServer
+  val server = new peregrineServer
   server.register(new ExampleApp)
 
   /* ###BEGIN_SPEC### */
@@ -252,7 +252,7 @@ class ExampleSpec extends FlatSpecHelper {
 
   "GET /index.html" should "respond 200" in {
     get("/")
-    response.body.contains("Stilt - The scala web framework") should equal(true)
+    response.body.contains("peregrine - The scala web framework") should equal(true)
     response.code should equal(200)
   }
 
@@ -309,7 +309,7 @@ class ExampleSpec extends FlatSpecHelper {
 
   "GET /go_home" should "render same as /" in {
     get("/go_home")
-    response.body.contains("Stilt - The scala web framework") should equal(true)
+    response.body.contains("peregrine - The scala web framework") should equal(true)
     response.code should equal(200)
   }
 

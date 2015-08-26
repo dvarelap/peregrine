@@ -1,5 +1,5 @@
 
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 import com.twitter.finagle.http.service.NullService
 import com.twitter.finagle.http.{Request => FinagleRequest}
@@ -47,18 +47,18 @@ class FileServiceSpec extends ShouldSpec {
   }
 
   "looking up static files in production" should "set Last-Modified" in {
-    System.setProperty("com.github.dvarelap.stilt.config.env", "production")
+    System.setProperty("com.github.dvarelap.peregrine.config.env", "production")
     try {
       val r = FinagleRequest("/dealwithit.gif")
       val response = fileService(r, NullService)
       Await.result(response).lastModified should not equal None
     } finally {
-      System.setProperty("com.github.dvarelap.stilt.config.env", "development")
+      System.setProperty("com.github.dvarelap.peregrine.config.env", "development")
     }
   }
 
   "looking up static files in production" should "return NOT_MODIFIED for unmodified file" in {
-    System.setProperty("com.github.dvarelap.stilt.config.env", "production")
+    System.setProperty("com.github.dvarelap.peregrine.config.env", "production")
     try {
       val req1 = FinagleRequest("/dealwithit.gif")
       val res1 = fileService(req1, NullService)
@@ -69,14 +69,14 @@ class FileServiceSpec extends ShouldSpec {
       val res2 = fileService(req2, NullService)
       Await.result(res2).status should equal(HttpResponseStatus.NOT_MODIFIED)
     } finally {
-      System.setProperty("com.github.dvarelap.stilt.config.env", "development")
+      System.setProperty("com.github.dvarelap.peregrine.config.env", "development")
     }
   }
 
 
   // TODO mustache is required in here and it's being removed so this wont pass
 //  "looking up a directory" should "return a non-empty, html response" in {
-//    System.setProperty("com.github.dvarelap.stilt.config.showDirectories", "true")
+//    System.setProperty("com.github.dvarelap.peregrine.config.showDirectories", "true")
 //    val r  = FinagleRequest("/components")
 //    val response = fileService(r, NullService)
 //    Await.result(response).contentType should equal(Some("text/html"))

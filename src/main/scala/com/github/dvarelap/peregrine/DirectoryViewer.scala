@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 import com.github.mustachejava.DefaultMustacheFactory
 import java.io.{StringWriter, File}

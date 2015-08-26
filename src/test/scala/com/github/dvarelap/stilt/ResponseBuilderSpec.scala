@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 import com.twitter.finagle.http.Status
 import org.jboss.netty.buffer.ChannelBuffers

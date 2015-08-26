@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 import java.net.URLEncoder
 import java.util
@@ -144,12 +144,12 @@ object MockApp {
   }
 
   def apply(controller: Controller): MockApp = {
-    val server = new StiltServer
+    val server = new peregrineServer
     server.register(controller)
     apply(server)
   }
 
-  def apply(server: StiltServer): MockApp = {
+  def apply(server: peregrineServer): MockApp = {
     val appService = new AppService(server.controllers)
     val service = server.allFilters(appService)
 

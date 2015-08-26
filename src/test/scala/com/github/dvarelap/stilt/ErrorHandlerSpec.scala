@@ -1,6 +1,6 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
-import com.github.dvarelap.stilt.test.FlatSpecHelper
+import com.github.dvarelap.peregrine.test.FlatSpecHelper
 import com.twitter.util.Future
 
 class ErrorHandlerSpec extends FlatSpecHelper {
@@ -34,7 +34,7 @@ class ErrorHandlerSpec extends FlatSpecHelper {
     }
   }
 
-  val server = new StiltServer
+  val server = new peregrineServer
   server.register(new HandlingCtrl)
   server.register(new FailingCtrl)
 

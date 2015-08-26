@@ -1,11 +1,11 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
-import com.github.dvarelap.stilt.test.FlatSpecHelper
+import com.github.dvarelap.peregrine.test.FlatSpecHelper
 import com.twitter.finagle.http.Cookie
 
 class SessionsSpec extends ShouldSpec with FlatSpecHelper {
 
-  override def server: StiltServer = new StiltServer {
+  override def server: peregrineServer = new peregrineServer {
     register(TestControllerWithSessions)
   }
 

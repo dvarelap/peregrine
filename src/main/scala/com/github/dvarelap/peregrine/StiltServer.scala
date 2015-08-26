@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 import java.io.{File, FileNotFoundException, FileOutputStream}
 import java.lang.management.ManagementFactory
@@ -14,7 +14,7 @@ import com.twitter.server.TwitterServer
 import com.twitter.util.Await
 import com.twitter.conversions.storage._
 
-class StiltServer extends TwitterServer {
+class peregrineServer extends TwitterServer {
   val controllers:  ControllerCollection = new ControllerCollection
   var filters:      Seq[Filter[FinagleRequest, FinagleResponse,FinagleRequest, FinagleResponse]] = Seq.empty
   val pid:          String = ManagementFactory.getRuntimeMXBean.getName.split('@').head
@@ -38,7 +38,7 @@ class StiltServer extends TwitterServer {
   }
 
   def main() {
-    log.info("stilt process " + pid + " started")
+    log.info("peregrine process " + pid + " started")
     start()
   }
 

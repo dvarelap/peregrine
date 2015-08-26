@@ -1,6 +1,6 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
-//import com.github.dvarelap.stilt.View
+//import com.github.dvarelap.peregrine.View
 //
 //case class Post(title: String)
 

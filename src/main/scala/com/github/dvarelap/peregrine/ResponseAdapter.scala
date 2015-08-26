@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 import com.twitter.util.Future
 import com.twitter.finagle.http.{Response => FinagleResponse}

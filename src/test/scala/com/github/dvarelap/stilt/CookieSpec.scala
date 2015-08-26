@@ -1,6 +1,6 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
-import com.github.dvarelap.stilt.test.FlatSpecHelper
+import com.github.dvarelap.peregrine.test.FlatSpecHelper
 import org.jboss.netty.handler.codec.http._
 
 
@@ -20,7 +20,7 @@ class CookieApp extends Controller {
 
 class CookieSpec extends FlatSpecHelper {
 
-  val server = new StiltServer
+  val server = new peregrineServer
   server.register(new CookieApp)
 
   "basic k/v cookie" should "have Foo:Bar" in {

@@ -1,6 +1,6 @@
-package com.github.dvarelap.stilt.test
+package com.github.dvarelap.peregrine.test
 
-import com.github.dvarelap.stilt.SpecHelper
+import com.github.dvarelap.peregrine.SpecHelper
 import org.scalatest.{FlatSpec, Matchers}
 
 trait FlatSpecHelper extends FlatSpec with Matchers with SpecHelper

@@ -1,6 +1,6 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
-import com.github.dvarelap.stilt.test.FlatSpecHelper
+import com.github.dvarelap.peregrine.test.FlatSpecHelper
 import com.twitter.finagle.http.Response
 import com.twitter.finagle.{Service, SimpleFilter, http}
 import com.twitter.util.Future
@@ -26,7 +26,7 @@ class TestFilter extends SimpleFilter[http.Request, Response] {
 
 class FinatraServerSpec extends FlatSpecHelper {
 
-  val server = new StiltServer
+  val server = new peregrineServer
   server.register(new TestApp)
 
   "app" should "register" in {

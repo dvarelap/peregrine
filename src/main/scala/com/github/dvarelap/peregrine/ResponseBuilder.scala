@@ -1,6 +1,6 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
-import com.github.dvarelap.stilt.jackson.DefaultJacksonJsonSerializer
+import com.github.dvarelap.peregrine.jackson.DefaultJacksonJsonSerializer
 import org.jboss.netty.buffer.ChannelBuffer
 import org.jboss.netty.handler.codec.http._
 import org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1

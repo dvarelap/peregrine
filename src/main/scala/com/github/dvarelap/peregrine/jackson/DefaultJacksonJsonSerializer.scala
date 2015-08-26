@@ -1,7 +1,7 @@
-package com.github.dvarelap.stilt.jackson
+package com.github.dvarelap.peregrine.jackson
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.dvarelap.stilt.JsonSerializer
+import com.github.dvarelap.peregrine.JsonSerializer
 import org.jboss.netty.util.CharsetUtil._
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 

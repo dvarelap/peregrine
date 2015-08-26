@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 class LayoutViewSpec extends ShouldSpec {
 //  "A LayoutView" should "render" in {

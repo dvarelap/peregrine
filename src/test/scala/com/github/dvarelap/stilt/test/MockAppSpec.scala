@@ -1,6 +1,6 @@
-package com.github.dvarelap.stilt.test
+package com.github.dvarelap.peregrine.test
 
-import com.github.dvarelap.stilt.{Controller, MockApp}
+import com.github.dvarelap.peregrine.{Controller, MockApp}
 import com.twitter.finagle.http.Request
 import org.jboss.netty.handler.codec.http.HttpMethod
 import org.scalatest.{FlatSpec, Matchers}

@@ -1,17 +1,17 @@
-# Stilt
+# peregrine
 
-[![Join the chat at https://gitter.im/dvarelap/stilt](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dvarelap/stilt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/dvarelap/stilt.svg)](https://travis-ci.org/dvarelap/stilt)
+[![Join the chat at https://gitter.im/dvarelap/peregrine](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dvarelap/peregrine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/dvarelap/peregrine.svg)](https://travis-ci.org/dvarelap/peregrine)
 
 ## Current Version - 1.0.1
 
-**Stilt** is a fast & thin Scala web framework inspired by Sinatra and powered by Twitter-Server
+**peregrine** is a fast & thin Scala web framework inspired by Sinatra and powered by Twitter-Server
 
 ***Note:*** this is a framework based on finatra 1.x.x. Why?, well since finatra 2.0.0-M1 it's not simple as it should be to write a simple and fast web app, so I decided to take a different path based on this awesome project and keep it the Sinatra way.
 
 Here a small app
 ```scala
-import com.github.dvarelap.stilt._
+import com.github.dvarelap.peregrine._
 
 class HelloController(prefix: String) extends Controller(prefix) {
 
@@ -21,7 +21,7 @@ class HelloController(prefix: String) extends Controller(prefix) {
   }
 }
 
-object MyServer extends StiltServer {
+object MyServer extends peregrineServer {
   register(new HelloController())
 }
 ```
@@ -34,7 +34,7 @@ object MyServer extends StiltServer {
 resolvers += "dvarelap repo" at "http://dl.bintray.com/dvarelap/maven"
 
 // Dependency
-"com.github.dvarelap" %% "stilt" % "1.0.1"
+"com.github.dvarelap" %% "peregrine" % "1.0.1"
  ```
 ### Maven
 on your settings file add this
@@ -77,7 +77,7 @@ and add the following to your pom.xml
 ```xml
 <dependency>
   <groupId>com.github.dvarelap</groupId>
-  <artifactId>stilt_2.11</artifactId>
+  <artifactId>peregrine_2.11</artifactId>
   <version>1.0.1</version>
 </dependency>
 ```

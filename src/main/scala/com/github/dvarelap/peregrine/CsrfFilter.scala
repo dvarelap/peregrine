@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 import com.twitter.finagle.http.{Request => FinagleRequest, Response => FinagleResponse}
 import com.twitter.finagle.{Service, SimpleFilter}
@@ -6,7 +6,7 @@ import com.twitter.util.{Future,Await}
 import org.jboss.netty.handler.codec.http.HttpMethod
 
 class CsrfFilter extends SimpleFilter[FinagleRequest, FinagleResponse] with Sessions {
-  
+
   def apply(req: FinagleRequest, service: Service[FinagleRequest, FinagleResponse]): Future[FinagleResponse] = {
     if (req.method == HttpMethod.GET) {
       for {

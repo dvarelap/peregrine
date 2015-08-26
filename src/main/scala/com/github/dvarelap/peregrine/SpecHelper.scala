@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 import com.twitter.finagle.http.{Request => FinagleRequest, Response => FinagleResponse}
 import com.twitter.util.{Await, Future}
@@ -22,7 +22,7 @@ trait SpecHelper {
   def response  = new MockResponse(Await.result(lastResponse))
   var lastResponse: Future[FinagleResponse] = null
 
-  def server: StiltServer
+  def server: peregrineServer
 
   def get(path:String, params:Map[String,String]=Map(), headers:Map[String,String]=Map()) {
     executeRequest(HttpMethod.GET,path,params,headers)

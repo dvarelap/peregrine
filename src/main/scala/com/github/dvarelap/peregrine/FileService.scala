@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 import com.twitter.finagle.{Service, SimpleFilter}
 import org.jboss.netty.handler.codec.http.HttpResponseStatus._
@@ -51,7 +51,7 @@ object FileResolver {
     new FileInputStream(file)
   }
 
-  private[stilt] def hasResourceFile(path: String): Boolean = {
+  private[peregrine] def hasResourceFile(path: String): Boolean = {
     val fi      = getClass.getResourceAsStream(path)
     var result  = false
 
@@ -66,7 +66,7 @@ object FileResolver {
     result
   }
 
-  private[stilt] def hasLocalFile(path: String): Boolean = {
+  private[peregrine] def hasLocalFile(path: String): Boolean = {
     val file = new File(config.docRoot(), path)
 
     if(file.toString.contains(".."))     return false

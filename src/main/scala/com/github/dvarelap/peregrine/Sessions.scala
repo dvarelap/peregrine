@@ -1,4 +1,4 @@
-package com.github.dvarelap.stilt
+package com.github.dvarelap.peregrine
 
 import com.twitter.finagle.http.Cookie
 import com.twitter.util.Future
@@ -87,7 +87,7 @@ private[this] object CookieSessionsHolder {
   def getOrElseUpdate(id: String, session: CookieBasedSession) = sessions.getOrElseUpdate(id, session)
 }
 
-private[stilt] object IdGenerator {
+private[peregrine] object IdGenerator {
 
   import java.security.SecureRandom
 
