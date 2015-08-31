@@ -27,6 +27,26 @@ object MyServer extends PeregrineServer {
 ```
 
 ## Quick Start
+See full documentation [here](docs.md)
+
+
+### Setup
+
+To get started, we have to define at least one `Controller` and register it with `PeregrineServer`, like so:
+
+```scala
+class Example extends Controller {
+  get("/") { request =>
+    render.plain("hi").toFuture
+  }
+}
+
+class MyServer extends PeregrineServer {
+  val controller = new Example()
+  register(controller)
+}
+```
+
 ### SBT
 
 ```scala
@@ -36,51 +56,7 @@ resolvers += "dvarelap repo" at "http://dl.bintray.com/dvarelap/maven"
 // Dependency
 "com.github.dvarelap" %% "peregrine" % "1.0.1"
  ```
-### Maven
-on your settings file add this
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0  http://maven.apache.org/xsd/settings-1.0.0.xsd' xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
-    <profiles>
-        <profile>
-            <repositories>
-                <repository>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                    <id>bintray-dvarelap-maven</id>
-                    <name>bintray</name>
-                    <url>http://dl.bintray.com/dvarelap/maven</url>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                    <id>bintray-dvarelap-maven</id>
-                    <name>bintray-plugins</name>
-                    <url>http://dl.bintray.com/dvarelap/maven</url>
-                </pluginRepository>
-            </pluginRepositories>
-            <id>bintray</id>
-        </profile>
-    </profiles>
-    <activeProfiles>
-        <activeProfile>bintray</activeProfile>
-    </activeProfiles>
-</settings>
-```
 
-and add the following to your pom.xml
-
-```xml
-<dependency>
-  <groupId>com.github.dvarelap</groupId>
-  <artifactId>peregrine_2.11</artifactId>
-  <version>1.0.1</version>
-</dependency>
-```
 ## What is gone?
 
 The default view to mustache, no we'll leave this an open desicion to the developer.

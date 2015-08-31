@@ -19,6 +19,14 @@ class ControllerSpec extends FlatSpecHelper {
     get("/foo", "/bar", "/zoo") { req =>
       render.plain("three results").toFuture
     }
+
+    get("/params/:id") { req =>
+      val params = for {
+        id    <- param(req)("id")
+        name  <- param(req)("name")
+      } yield id + "-" + name
+      render.plain(params.getOrElse("nothing")).toFuture
+    }
   }
 
   val server = new PeregrineServer
@@ -47,5 +55,16 @@ class ControllerSpec extends FlatSpecHelper {
     get("/api/zoo")
     response.body   should equal ("three results")
     response.code   should equal (200)
+  }
+
+  "params gathering" should "should find first route params, then mutli and then normal params" in {
+    get("/api/params/1?name=dan")
+    response.body   should equal ("1-dan")
+    response.code   should equal (200)
+
+    get("/api/params/1")
+    response.body   should equal ("nothing")
+    response.code   should equal (200)
+
   }
 }

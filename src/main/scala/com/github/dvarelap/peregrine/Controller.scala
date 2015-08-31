@@ -6,7 +6,7 @@ import com.twitter.server.Stats
 import com.twitter.util.Future
 import org.jboss.netty.handler.codec.http._
 
-class Controller extends App with Stats {
+class Controller extends App with Stats with Params {
 
   val routes                     = new RouteVector
   val stats                      = statsReceiver.scope("Controller")
