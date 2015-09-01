@@ -33,6 +33,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
   private var view          : Option[View]          = None
   private var buffer        : Option[ChannelBuffer] = None
   private var cookies       : List[Cookie]          = List()
+  private var csrfToken     : Option[String]        = None
   private var jsonSerializer: JsonSerializer        = serializer
 
   def contentType: Option[String] = this.headers.get("Content-Type")
@@ -49,6 +50,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
   }
 
   private def _setContentView(resp: HttpResponse, view: View): Unit = {
+    view._csrf = csrfToken
     val out = view.render
     val bytes = out.getBytes(UTF_8)
     resp.headers.set("Content-Length", bytes.length)
@@ -207,6 +209,8 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
     }
 
     cookies foreach response.cookies.add
+
+    csrfToken = response.cookies.get("_authenticity_token").map(_.value)
 
     setContent(response)
 
