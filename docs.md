@@ -77,6 +77,22 @@ options("/users") { request =>
 }
 ```
 
+You can also define a prefix for each controller you register:
+```scala
+class PrefixExample extends Controller {
+  get("/path") { request =>
+    render.plain("hi").toFuture
+  }
+}
+
+
+object MyPrefixServer extends PeregrineServer {
+  // you now should call GET /api/path to trigger that action
+  register(new PrefixExample, "/api")
+}
+```
+
+
 It's also possible render a route from another route, like:
 
 ```scala
@@ -85,6 +101,15 @@ get("/") { request =>
 }
 
 get("/home") { request =>
+  ...
+}
+```
+
+And you can define multiple routes for a single action like:
+
+```scala
+// GET /home & GET /inicio will do the exact same action
+get("/home", "/inicio") { request =>
   ...
 }
 ```
