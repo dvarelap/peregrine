@@ -6,7 +6,6 @@
 *   [Futures](#futures)
 *   [Params](#params)
 *   [Responses](#responses)
-<!-- *   [Templates](#templates) -->
 *   [Assets](#assets)
 *   [Headers](#headers)
 *   [Cookies](#cookies)
@@ -18,6 +17,8 @@
 *   [Deploying](#deploying)
 
 
+
+<!-- *   [Templates](#templates) -->
 
 
 ## Setup
