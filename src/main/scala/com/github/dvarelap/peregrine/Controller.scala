@@ -15,13 +15,13 @@ class Controller extends App with Stats with Params {
   var notFoundHandler: Option[(Request) => Future[ResponseBuilder]] = None
   var errorHandler   : Option[(Request) => Future[ResponseBuilder]] = None
 
-  def get(paths: String*)   (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.GET,    path)(callback)) }
-  def delete(paths: String*)(callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.DELETE, path)(callback)) }
-  def post(paths: String*)  (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.POST,   path)(callback)) }
-  def put(paths: String*)   (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.PUT,    path)(callback)) }
-  def head(paths: String*)  (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.HEAD,   path)(callback)) }
-  def patch(paths: String*) (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.PATCH,  path)(callback)) }
-  def options(paths: String*)(callback: Request => Future[ResponseBuilder]){ paths.foreach(path => addRoute(HttpMethod.OPTIONS, path)(callback)) }
+  def get(paths: String*)    (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.GET,      path)(callback)) }
+  def delete(paths: String*) (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.DELETE,   path)(callback)) }
+  def post(paths: String*)   (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.POST,     path)(callback)) }
+  def put(paths: String*)    (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.PUT,      path)(callback)) }
+  def head(paths: String*)   (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.HEAD,     path)(callback)) }
+  def patch(paths: String*)  (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.PATCH,    path)(callback)) }
+  def options(paths: String*)(callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.OPTIONS,  path)(callback)) }
 
   def notFound(callback: Request => Future[ResponseBuilder]) { notFoundHandler = Option(callback) }
   def error(callback: Request => Future[ResponseBuilder]) { errorHandler = Option(callback) }
