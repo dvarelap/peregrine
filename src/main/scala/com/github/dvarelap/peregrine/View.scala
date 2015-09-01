@@ -7,3 +7,7 @@ trait View extends Callable[String] {
   def call: String                = render
   def contentType: Option[String] = None
 }
+
+trait CsrfView {
+  def _csrf: String
+}
