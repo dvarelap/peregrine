@@ -65,7 +65,7 @@ TODO: sample here.
 
 ## What should be implemented?
 - ~~Session support~~
-- CSRF protection
+- ~~CSRF protection~~
 
 ## Want to join the trip?
 Fork the project, right away!
