@@ -14,7 +14,9 @@
 *   [Logging](#logging)
 *   [Stats](#stats)
 *   [Testing](#testing)
-*   [Deploying](#deploying)
+
+
+<!-- *   [Deploying](#deploying) -->
 
 
 
@@ -558,7 +560,7 @@ class AppSpec extends FlatSpecHelper {
 
 
 
-
+<!--
 # Deploying
 
 The `pom.xml` of generated Peregrine projects builds a single, deployable "fatjar" with:
@@ -569,4 +571,4 @@ mvn package
 
 This produces a runnable jar with scala, peregrine, and any other dependent libraries included inside the `target/` directory.
 
-If you are using Heroku, the included `[Procfile](https://github.com/twitter/peregrine/blob/1.5.3/script/peregrine/share/Procfile)` will work out of the box.
+If you are using Heroku, the included `[Procfile](https://github.com/twitter/peregrine/blob/1.5.3/script/peregrine/share/Procfile)` will work out of the box. -->
