@@ -13,7 +13,7 @@ Here a small app
 ```scala
 import com.github.dvarelap.peregrine._
 
-class HelloController(prefix: String) extends Controller(prefix) {
+class HelloController extends Controller {
 
   get("/hello/:name") { request =>
     val name = request.routeParams.getOrElse("name", "nothing")
@@ -22,7 +22,7 @@ class HelloController(prefix: String) extends Controller(prefix) {
 }
 
 object MyServer extends PeregrineServer {
-  register(new HelloController())
+  register(new HelloController)
 }
 ```
 
