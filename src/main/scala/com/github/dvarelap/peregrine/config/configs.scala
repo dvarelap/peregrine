@@ -3,7 +3,6 @@ package com.github.dvarelap.peregrine.config
 import com.twitter.app.GlobalFlag
 
 object port            extends GlobalFlag[String](":7070", "Http Port")
-object adminPort       extends GlobalFlag[String](":9999", "Admin/Stats Port")
 object sslPort         extends GlobalFlag[String](":7443", "Https Port")
 object env             extends GlobalFlag[String]("development", "Environment {development |test | production }")
 object pidEnabled      extends GlobalFlag[Boolean](false, "whether to write pid file")

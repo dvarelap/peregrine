@@ -21,7 +21,6 @@ class PeregrineServer extends TwitterServer {
 
   var secureServer: Option[ListeningServer] = None
   var server:       Option[ListeningServer] = None
-  var adminServer:  Option[ListeningServer] = None
 
   def allFilters(baseService: Service[FinagleRequest, FinagleResponse]):
   Service[FinagleRequest, FinagleResponse] = {
@@ -114,15 +113,9 @@ class PeregrineServer extends TwitterServer {
     server = Some(HttpServer.serve(config.port(), service))
   }
 
-  def startAdminServer() {
-    log.info("admin http server started on port: " + config.adminPort())
-    adminServer = Some(Http.serve(config.adminPort(), HttpMuxer))
-  }
-
   def stop() {
     server map { _.close() }
     secureServer map { _.close() }
-    adminServer map { _.close() }
   }
 
   onExit {
@@ -140,16 +133,11 @@ class PeregrineServer extends TwitterServer {
       startHttpServer()
     }
 
-    if (!config.adminPort().isEmpty) {
-      startAdminServer()
-    }
-
     if (!config.sslPort().isEmpty) {
       startSecureServer()
     }
 
     server       map { Await.ready(_) }
-    adminServer  map { Await.ready(_) }
     secureServer map { Await.ready(_) }
 
   }

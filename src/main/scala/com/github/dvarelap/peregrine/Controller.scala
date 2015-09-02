@@ -5,6 +5,7 @@ import com.twitter.app.App
 import com.twitter.server.Stats
 import com.twitter.util.Future
 import org.jboss.netty.handler.codec.http._
+import com.twitter.finagle.stats._
 
 class Controller extends App with Stats {
 
@@ -59,9 +60,8 @@ class Controller extends App with Stats {
   def addRoute(method: HttpMethod, path: String)(callback: Request => Future[ResponseBuilder]) {
     val regex = SinatraPathPatternParser(path)
     routes.add(Route(method, path, regex, (r) => {
-      stats.timeFuture("%s/Root/%s".format(method.toString, path.stripPrefix("/"))) {
-        callback(r)
-      }
+      val reqStat = stats.stat("%s/Root/%s".format(method.toString, path.stripPrefix("/")))
+      Stat.timeFuture(reqStat)(callback(r))
     }))
   }
 
