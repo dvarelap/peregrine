@@ -57,18 +57,9 @@ resolvers += "dvarelap repo" at "http://dl.bintray.com/dvarelap/maven"
 "com.github.dvarelap" %% "peregrine" % "1.0.1"
  ```
 
-## What is gone?
-
-The default view to mustache, no we'll leave this an open desicion to the developer.
-
-TODO: sample here.
-
-## What should be implemented?
-- ~~Session support~~
-- ~~CSRF protection~~
-
 ## Want to join the trip?
 Fork the project, right away!
+and code/fix one of [these issues](issues)
 
 
 ## Licence
