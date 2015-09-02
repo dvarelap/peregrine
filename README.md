@@ -59,7 +59,7 @@ resolvers += "dvarelap repo" at "http://dl.bintray.com/dvarelap/maven"
 
 ## Want to join the trip?
 Fork the project, right away!
-and code/fix one of [these issues](issues)
+and code/fix one of [these issues](https://github.com/dvarelap/peregrine/issues)
 
 
 ## Licence
