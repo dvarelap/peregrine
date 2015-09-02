@@ -222,8 +222,8 @@ case class Person(firstName: String, lastName: String)
 // GET /hello/Dan?lastName=Varela
 get("/hello/:firstName") { req =>
   val u = for {
-    firstName <- param(req)("firstName")
-    lastName  <- param(req)("lastName")
+    firstName <- req.param("firstName")
+    lastName  <- req.param("lastName")
   } yield Person(firstName, lastName)
 
   render.json(u).toFuture

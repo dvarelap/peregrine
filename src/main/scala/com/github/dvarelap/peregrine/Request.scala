@@ -37,6 +37,10 @@ class Request(val request: FinagleRequest) extends RequestProxy {
       Seq.empty[ContentType]
     }
   }
+
+  def param(key: String): Option[String] = {
+    routeParams.get(key) orElse params.get(key)
+  }
 }
 
 object AcceptOrdering extends Ordering[String] {

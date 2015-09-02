@@ -22,8 +22,8 @@ class ControllerSpec extends FlatSpecHelper {
 
     get("/params/:id") { req =>
       val params = for {
-        id    <- param(req)("id")
-        name  <- param(req)("name")
+        id    <- req.param("id")
+        name  <- req.param("name")
       } yield id + "-" + name
       render.plain(params.getOrElse("nothing")).toFuture
     }
