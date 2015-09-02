@@ -10,21 +10,7 @@
 ***Note:*** this is a framework based on finatra 1.x.x. Why?, well since finatra 2.0.0-M1 it's not simple as it should be to write a simple and fast web app, so I decided to take a different path based on this awesome project and keep it the Sinatra way.
 
 Here a small app
-```scala
-import com.github.dvarelap.peregrine._
-
-class HelloController extends Controller {
-
-  get("/hello/:name") { request =>
-    val name = request.routeParams.getOrElse("name", "nothing")
-    render.plain("hello " + name).toFuture
-  }
-}
-
-object MyServer extends PeregrineServer {
-  register(new HelloController)
-}
-```
+![example](images/example.png)
 
 ## Quick Start
 See full documentation [here](docs.md)
