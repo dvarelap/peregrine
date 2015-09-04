@@ -6,7 +6,7 @@ import com.twitter.finagle.http.Cookie
 class AssetsFilterSpec extends ShouldSpec with FlatSpecHelper {
 
   override def server: PeregrineServer = new PeregrineServer {
-    addFilter(new AssetsFilter(assetsPrefix = "/assets/"))
+    addFilter(new AssetsFilter())
     register(testController)
   }
 
@@ -32,5 +32,11 @@ class AssetsFilterSpec extends ShouldSpec with FlatSpecHelper {
     get("/assets/components/test_folder/subfoldertest.js?q=1&s=fido")
     response.code      should equal(200)
     response.body.trim should equal("""function (e) {return e + 'a';}""")
+  }
+
+  "GET /assets/error" should "not show action and reneder the correct asset" in {
+    get("/assets/error")
+    response.code      should equal(404)
+    response.body.trim should equal("")
   }
 }

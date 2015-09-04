@@ -8,14 +8,23 @@ import org.jboss.netty.handler.codec.http.HttpMethod
 class CsrfFilter extends SimpleFilter[FinagleRequest, FinagleResponse] with Sessions {
 
   def apply(req: FinagleRequest, service: Service[FinagleRequest, FinagleResponse]): Future[FinagleResponse] = {
+    // we bypass on assets requests
+    if (req.path.startsWith(config.assetsPathPrefix())) {
+      service(req)
+    } else {
+      _applyCsrfProtection(req, service)
+    }
+  }
+
+  private def _applyCsrfProtection(req: FinagleRequest, service: Service[FinagleRequest, FinagleResponse]) = {
     if (req.method == HttpMethod.GET) {
       for {
-        _           <- addCsrfToken(req)
+        _           <- _addCsrfToken(req)
         res         <- service(req)
       } yield res
     } else {
       for {
-        csrfToken   <- addCsrfToken(req)
+        csrfToken   <- _addCsrfToken(req)
         authToken   <- Future(req.cookies.getOrElse("_authenticity_token", buildVoidCookie).value)
         paramToken  <- Future(req.params.getOrElse("_csrf_token", ""))
         res         <- if (csrfToken == paramToken && csrfToken == authToken) service(req)
@@ -24,7 +33,7 @@ class CsrfFilter extends SimpleFilter[FinagleRequest, FinagleResponse] with Sess
     }
   }
 
-  private def addCsrfToken(req: FinagleRequest) = {
+  private def _addCsrfToken(req: FinagleRequest) = {
     for {
       session     <- session(new Request(req))
       csrfToken   <- session.getOrElseUpdate[String]("_csrf_token", generateToken)

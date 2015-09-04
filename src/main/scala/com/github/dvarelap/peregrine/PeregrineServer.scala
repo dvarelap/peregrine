@@ -42,12 +42,14 @@ class PeregrineServer extends TwitterServer {
   }
 
   private[this] lazy val service = {
-    val appService  = new AppService(controllers)
-    val fileService = new FileService
+    val appService    = new AppService(controllers)
+    // val fileService   = new FileService
     val loggingFilter = new LoggingFilter
+    val assetsFilter  = new AssetsFilter
 
     addFilter(loggingFilter)
-    addFilter(fileService)
+    addFilter(assetsFilter)
+    // addFilter(fileService)
     allFilters(appService)
   }
 
