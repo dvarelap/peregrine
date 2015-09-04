@@ -6,7 +6,7 @@ import com.twitter.logging.Logger
 import com.twitter.util.Future
 
 class LoggingFilter extends SimpleFilter[FinagleRequest, FinagleResponse] {
-  private val logger: Logger = Logger.get("peregrine")
+  private val logger: Logger = Logger.get(config.logNode())
 
   def apply(request: FinagleRequest, service: Service[FinagleRequest, FinagleResponse]): Future[FinagleResponse] = {
     val start = System.currentTimeMillis()
