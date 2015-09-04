@@ -71,9 +71,9 @@ class CookieBasedSession(val sessionId: String) extends Session {
   override def get[T](key: String): Future[Option[T]] = Future(values.get(key).map(_.asInstanceOf[T]))
   override def put[T](key: String, value: T, expiresIn: Seconds = 3600000): Future[Unit] = Future(values.put(key, value))
   override def del(key: String): Future[Unit] = Future(values.remove(key))
-  override def getOrElseUpdate[T](key: String, value: T):Future[T] = get(key).flatMap {
+  override def getOrElseUpdate[T](key: String, value: T):Future[T] = get[T](key).flatMap {
     case Some(t) => Future(t)
-    case None    => put(key, value).map(_ => value)
+    case None    => put[T](key, value).map(_ => value)
   }
 }
 
