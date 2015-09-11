@@ -8,7 +8,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import scala.collection.JavaConverters._
 
 class MockAppSpec extends FlatSpec with Matchers {
-  val server = MockApp(new Controller)
+  val server = MockApp(new Controller{})
 
   "#toByteArray" should "directly convert String to Array[Byte]" in {
     val value = "hello world"
