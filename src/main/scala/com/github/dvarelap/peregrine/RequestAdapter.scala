@@ -5,7 +5,7 @@ import org.jboss.netty.handler.codec.http.HttpMethod
 import org.jboss.netty.handler.codec.http.multipart.HttpPostRequestDecoder
 
 /**
- * Adapts a FinagleRquest to a FinatraRequest
+ * Adapts a FinagleRquest to a PeregrineRequest
  */
 object RequestAdapter {
 

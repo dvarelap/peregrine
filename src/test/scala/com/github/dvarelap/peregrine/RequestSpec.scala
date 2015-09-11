@@ -25,9 +25,9 @@ class RequestSpec extends ShouldSpec {
     nettyRequest.setContent(ChannelBuffers.wrappedBuffer("test=foo".getBytes))
     nettyRequest.headers().add("Content-Type", "application/x-www-form-urlencoded")
     val finagleRequest = FinagleRequest(nettyRequest)
-    val finatraRequest = new Request(finagleRequest)
-    finatraRequest.params.get("test") should equal(Some("foo"))
-    finatraRequest.params.get("q") should equal(Some("hi"))
+    val request = new Request(finagleRequest)
+    request.params.get("test") should equal(Some("foo"))
+    request.params.get("q") should equal(Some("hi"))
   }
 
 }

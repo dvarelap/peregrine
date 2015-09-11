@@ -22,7 +22,8 @@ trait LoggingFilterHelper extends LoggerColors {
 
       val duration = elapsed().inMicroseconds/1000.0
       val mColor = methodColor(response.statusCode)
-      logger.info("%s%s %s\"%s\" %s%d %sin %s%.3fms%s",
+      logger.info("[%s%s] %s%s %s\"%s\" %s%d %sin %s%.3fms%s",
+          ANSI_RESET, request.remoteHost,
           ANSI_PURPLE, request.method,
           ANSI_BLUE, request.uri,
           mColor, response.statusCode,

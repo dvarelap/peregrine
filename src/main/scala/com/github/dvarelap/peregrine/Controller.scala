@@ -7,9 +7,9 @@ import com.twitter.util.Future
 import org.jboss.netty.handler.codec.http._
 import com.twitter.finagle.stats._
 
-class Controller extends App with Stats {
+trait Controller extends App with Stats {
 
-  val routes                     = new RouteVector
+  val routeList                     = new RouteVector
   val stats                      = statsReceiver.scope("Controller")
   var serializer: JsonSerializer = DefaultJacksonJsonSerializer
 
@@ -59,11 +59,11 @@ class Controller extends App with Stats {
 
   def addRoute(method: HttpMethod, path: String)(callback: Request => Future[ResponseBuilder]) {
     val regex = SinatraPathPatternParser(path)
-    routes.add(Route(method, path, regex, (r) => {
+    routeList.add(Route(method, path, regex, (r) => {
       val reqStat = stats.stat("%s/Root/%s".format(method.toString, path.stripPrefix("/")))
       Stat.timeFuture(reqStat)(callback(r))
     }))
   }
 
-  private[peregrine] def withPrefix(prefix: String) = routes.withPrefix(prefix)
+  private[peregrine] def withPrefix(prefix: String) = routeList.withPrefix(prefix)
 }

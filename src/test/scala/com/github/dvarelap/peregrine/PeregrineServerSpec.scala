@@ -24,7 +24,7 @@ class TestFilter extends SimpleFilter[http.Request, Response] {
 
 }
 
-class FinatraServerSpec extends FlatSpecHelper {
+class PeregrineServerSpec extends FlatSpecHelper {
 
   val server = new PeregrineServer
   server.register(new TestApp)

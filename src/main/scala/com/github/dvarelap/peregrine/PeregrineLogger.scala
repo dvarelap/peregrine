@@ -22,8 +22,8 @@ trait PeregrineLogger extends LoggerColors {
   val environment   = config.env()
 
   protected val policy           = if (config.env() != "production") Policy.SigHup else Policy.Weekly(0)
-  protected val consoleFormatter = new Formatter(prefix =s"$ANSI_CYAN%.3s$ANSI_RESET <yyyy/MM/dd HH:mm:ss.SSS> [%s] - ")
-  protected val fileFormatter    = new Formatter(prefix =s"%.3s <yyyy/MM/dd HH:mm:ss.SSS> [%s] - ") {
+  protected val consoleFormatter = new Formatter(prefix =s"$ANSI_CYAN%.3s$ANSI_RESET <yyyy/MM/dd HH:mm:ss.SSS>")
+  protected val fileFormatter    = new Formatter(prefix =s"%.3s <yyyy/MM/dd HH:mm:ss.SSS>") {
     override def formatText(record: javalog.LogRecord): String = {
       super.formatText(record).replaceAll("\u001B\\[[;\\d]*m", "")
     }

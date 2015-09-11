@@ -41,7 +41,6 @@ class PeregrineServer extends TwitterServer with PeregrineLogger {
   }
 
   def main() {
-    log.info("peregrine process " + pid + " started")
     start()
   }
 
@@ -105,7 +104,8 @@ class PeregrineServer extends TwitterServer with PeregrineLogger {
       object HttpsServer extends DefaultServer[FinagleRequest, FinagleResponse, Any, Any](
         "https", HttpsListener, new HttpServerDispatcher(_, _)
       )
-      log.info(s"https server started on port: $ANSI_YELLOW ${config.sslPort()} $ANSI_RESET")
+      printf(">> Listening [HTTPS] on 0.0.0.0%s%s%s%n",
+        ANSI_YELLOW, config.sslPort(), ANSI_RESET)
       secureServer = Some(HttpsServer.serve(config.sslPort(), service))
     }
   }
@@ -115,7 +115,8 @@ class PeregrineServer extends TwitterServer with PeregrineLogger {
     object HttpServer extends DefaultServer[FinagleRequest, FinagleResponse, Any, Any](
       "http", HttpListener, new HttpServerDispatcher(_, _)
     )
-    log.info(s"http server started on port: $ANSI_YELLOW ${config.port()} $ANSI_RESET")
+    printf(">> Listening on 0.0.0.0%s%s%s%n",
+      ANSI_YELLOW, config.port(), ANSI_RESET)
     server = Some(HttpServer.serve(config.port(), service))
   }
 
@@ -130,6 +131,8 @@ class PeregrineServer extends TwitterServer with PeregrineLogger {
   }
 
   def start() {
+    printf("%n== Peregringe has taken off for %s%s%s with pid %s%s%n",
+      ANSI_BLUE, config.env(), ANSI_RESET, pid, ANSI_RESET)
 
     if (!config.pidPath().isEmpty) {
       writePidFile()
@@ -137,6 +140,7 @@ class PeregrineServer extends TwitterServer with PeregrineLogger {
 
     if (!config.port().isEmpty) {
       startHttpServer()
+
     }
 
     if (!config.sslPort().isEmpty) {
@@ -145,6 +149,5 @@ class PeregrineServer extends TwitterServer with PeregrineLogger {
 
     server       map { Await.ready(_) }
     secureServer map { Await.ready(_) }
-
   }
 }

@@ -3,9 +3,6 @@ package com.github.dvarelap.peregrine
 import com.github.dvarelap.peregrine.ContentType._
 import com.github.dvarelap.peregrine.test.FlatSpecHelper
 
-/* This test is used as the base for generating the
- README.markdown, all new generated apps, and the finatra_example repo
- */
 
 class ExampleSpec extends FlatSpecHelper {
 

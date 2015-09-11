@@ -45,7 +45,7 @@ class Router(controller: Controller) {
   }
 
   def findRouteAndMatch(request: Request, method: HttpMethod):Option[Route] = {
-    controller.routes.vector.find {
+    controller.routeList.vector.find {
       case Route(_method, definition, pattern, callback) =>
         pattern(request.path.split('?').head) match {
           case Some(theMatch) if _method == method => theMatch.foreach((xs: (_, _)) => extractParams(request, xs)); true
