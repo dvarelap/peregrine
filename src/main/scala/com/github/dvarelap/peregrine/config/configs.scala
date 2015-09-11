@@ -18,3 +18,4 @@ object maxRequestSize     extends GlobalFlag[Int](5, "maximum request size (in m
 object certificatePath    extends GlobalFlag[String]("", "path to SSL certificate")
 object keyPath            extends GlobalFlag[String]("", "path to SSL key")
 object showDirectories    extends GlobalFlag[Boolean](false, "allow directory view in asset path")
+object debugAssets        extends GlobalFlag[Boolean](false, "enable to show assets requests in logs")

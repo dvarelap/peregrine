@@ -14,7 +14,9 @@ import com.twitter.server.TwitterServer
 import com.twitter.util.Await
 import com.twitter.conversions.storage._
 
-class PeregrineServer extends TwitterServer {
+class PeregrineServer extends TwitterServer with PeregrineLogger {
+  override lazy val log = logger()
+
   val controllers:  ControllerCollection = new ControllerCollection
   var filters:      Seq[Filter[FinagleRequest, FinagleResponse,FinagleRequest, FinagleResponse]] = Seq.empty
   val pid:          String = ManagementFactory.getRuntimeMXBean.getName.split('@').head
@@ -26,6 +28,8 @@ class PeregrineServer extends TwitterServer {
   Service[FinagleRequest, FinagleResponse] = {
     filters.foldRight(baseService) { (b,a) => b andThen a }
   }
+
+  override def loggerFactories = loggingFactories
 
   def register(controller: Controller, pathPrefix: String = "") {
     controller.withPrefix(pathPrefix)
@@ -47,8 +51,8 @@ class PeregrineServer extends TwitterServer {
     val loggingFilter = new LoggingFilter
     val assetsFilter  = new AssetsFilter
 
-    addFilter(loggingFilter)
     addFilter(assetsFilter)
+    addFilter(loggingFilter)
     // addFilter(fileService)
     allFilters(appService)
   }
@@ -101,7 +105,7 @@ class PeregrineServer extends TwitterServer {
       object HttpsServer extends DefaultServer[FinagleRequest, FinagleResponse, Any, Any](
         "https", HttpsListener, new HttpServerDispatcher(_, _)
       )
-      log.info("https server started on port: " + config.sslPort())
+      log.info(s"https server started on port: $ANSI_YELLOW ${config.sslPort()} $ANSI_RESET")
       secureServer = Some(HttpsServer.serve(config.sslPort(), service))
     }
   }
@@ -111,7 +115,7 @@ class PeregrineServer extends TwitterServer {
     object HttpServer extends DefaultServer[FinagleRequest, FinagleResponse, Any, Any](
       "http", HttpListener, new HttpServerDispatcher(_, _)
     )
-    log.info("http server started on port: " + config.port())
+    log.info(s"http server started on port: $ANSI_YELLOW ${config.port()} $ANSI_RESET")
     server = Some(HttpServer.serve(config.port(), service))
   }
 
