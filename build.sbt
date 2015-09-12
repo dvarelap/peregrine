@@ -11,10 +11,10 @@ scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation")
 
 lazy val peregrine = (project in file("."))
   .settings(
-    version in ThisBuild := "1.0.6-SNAPSHOT",
+    version in ThisBuild := "1.1.0-SNAPSHOT",
     organization := "com.github.dvarelap",
     name := "peregrine",
-    version := "1.0.6-SNAPSHOT",
+    version := "1.1.0-SNAPSHOT",
     scalaVersion := "2.11.7",
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
     publishMavenStyle := true,
