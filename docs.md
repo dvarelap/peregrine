@@ -632,7 +632,7 @@ sbt assembly
 
 This produces a runnable jar with scala, peregrine, and any other dependent libraries included inside the `target/` directory.
 
-If you are using Heroku, create a `[Procfile](https://github.com/twitter/peregrine/blob/1.5.3/script/peregrine/share/Procfile)` like
+If you are using Heroku, create a [Procfile](https://github.com/twitter/peregrine/blob/1.5.3/script/peregrine/share/Procfile) like
 ```
 web:    java -Dio.peregrine.config.env=production -Dio.peregrine.config.adminPort='' -Dio.peregrine.config.port=:$PORT -cp target/classes:target/dependency/* app
 ```
