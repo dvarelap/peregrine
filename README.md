@@ -3,7 +3,7 @@
 [![Join the chat at https://gitter.im/dvarelap/peregrine](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dvarelap/peregrine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/dvarelap/peregrine.svg)](https://travis-ci.org/dvarelap/peregrine)
 
-Quick app:
+Minimal app:
 ```scala
 import io.peregrine._
 
@@ -14,8 +14,9 @@ object WebApp extends PeregrineApp {
 }
 ```
 
-Install dependency:
+Install dependency in build.sbt file:
 ```scala
+resolvers += "dvarelap repo" at "http://dl.bintray.com/dvarelap/maven"
 libraryDependencies += "com.github.dvarelap" %% "peregrine" % "1.1.0"
 ```
 
@@ -24,11 +25,12 @@ And run with:
 $ sbt run
 ```
 
-
 View at: [http://localhost:5000/hi](http://localhost:5000/hi)
 
 ## Full Documentation
 See full documentation [here](docs.md)
+
+**Note** Peregrine works only with scala version 2.11+
 
 ## Licence
 Copyright 2015 Daniel Varela and other contributors.

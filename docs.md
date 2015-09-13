@@ -1,97 +1,88 @@
 # Peregrine Documentation
 
-*   [Setup](#setup)
-*   [Routing](#routing)
-*   [Requests](#requests)
-*   [Futures](#futures)
-*   [Params](#params)
-*   [Responses](#responses)
-*   [Assets](#assets)
-*   [Headers](#headers)
-*   [Cookies](#cookies)
-*   [Uploads](#uploads)
-*   [Filters](#filters)
-*   [Logging](#logging)
-*   [Stats](#stats)
-*   [Testing](#testing)
-
-
-<!-- *   [Deploying](#deploying) -->
+*   [Getting Started](#Getting Started)
+*   [Routing](#Routing)
+*   [Params](#Params)
+*   [Request](#Request)
+*   [Controllers](#Controllers)
+*   [Futures](#Futures)
+*   [Responses](#Responses)
+*   [Assets](#Assets)
+*   [Headers](#Headers)
+*   [Cookies](#Cookies)
+*   [Uploads](#Uploads)
+*   [Filters](#Filters)
+*   [Logging](#Logging)
+*   [Stats](#Stats)
+*   [Testing](#Testing)
+*   [Deploying](#deploying)
 
 
 
 <!-- *   [Templates](#templates) -->
 
 
-## Setup
+## Getting Started
 
-To get started, we have to define at least one `Controller` and register it with `PeregrineServer`, like so:
-
+Minimal app:
 ```scala
-class Example extends Controller {
-  get("/") { request =>
-    render.plain("hi").toFuture
-  }
-}
+import io.peregrine._
 
-class MyServer extends PeregrineServer {
-  val controller = new Example()
-  register(controller)
+object WebApp extends PeregrineApp {
+  get("/hi") { req =>
+    render.plain("Hello World!").toFuture
+  }
 }
 ```
 
-You can call `register` multiple times to register various controllers. Now you can use `MyServer` as your `mainClass` since `PeregrineServer` implements `main` for you.
+Install dependency in build.sbt file:
+```scala
+resolvers += "dvarelap repo" at "http://dl.bintray.com/dvarelap/maven"
 
+libraryDependencies += "com.github.dvarelap" %% "peregrine" % "1.1.0"
+```
 
+And run with:
+```batch
+$ sbt run
+```
 
+View at: [http://localhost:5000/hi](http://localhost:5000/hi)
 
 ## Routing
 
-Routes belong to a `Controller`. When Peregrine receives a request for a particular URL, it will scan all registered controllers and dispatch to the first one that contains a match. For example:
+A route is a HTTP method paired with a URL matching pattern.
+When Peregrine receives a request for a particular URL, it will scan all registered routes and dispatch to the first one that contains a match.
 
 ```scala
-class Example extends Controller {
-  get("/") { request =>
-    render.plain("hi").toFuture
-  }
+get("/") { req =>
+// ...
+}
+
+delete("/") { req =>
+// ...
+}
+
+post("/") { req =>
+// ...
+}
+
+put("/") { req =>
+// ...
+}
+
+head("/") { req =>
+// ...
+}
+
+patch("/") { req =>
+// ...
+}
+
+options("/") { req =>
+// ...
 }
 ```
-
-This code will run when a `GET` to `/` is sent and return "hi" in plaintext. All [HTTP verbs](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) are supported:
-
-```scala
-get("/users") { request =>
-  ...
-}
-
-post("/users") { request =>
-  ...
-}
-
-put("/users") { request =>
-  ...
-}
-
-options("/users") { request =>
-  ...
-}
-```
-
-You can also define a prefix for each controller you register:
-```scala
-class PrefixExample extends Controller {
-  get("/path") { request =>
-    render.plain("hi").toFuture
-  }
-}
-
-
-object MyPrefixServer extends PeregrineServer {
-  // you now should call GET /api/path to trigger that action
-  register(new PrefixExample, "/api")
-}
-```
-
 
 It's also possible render a route from another route, like:
 
@@ -153,48 +144,7 @@ get("/secret") { request =>
 }
 ```
 
-
-
-
-# Request
-
-You'll notice a `request` object is passed into your routing code, this has useful information about the request:
-
-```scala
-get("/request-info") { request =>
-  println(request.remoteAddress)
-  println(request.path)
-  println(request.userAgent)
-  render.plain("done").toFuture
-}
-```
-
-See `Request` for more information.
-
-
-
-
-# Futures
-
-Every route is expected to a return a `Future[Response]`, hence all the `.toFuture` calls you've been seeing in our examples. This is an important distinction from synchronous frameworks as all your routes may be executed concurrently instead of one at a time. It's especially useful when dealing with libraries/services that return `Future`'s themselves (like a finagle-http client):
-
-```scala
-get("/current-time") { request =>
-  httpClient.apply("/api/time.txt") map { response =>
-    val currentTime = response.contentString()
-    render.plain("the time is: " + currentTime)
-  }
-}
-```
-
-Note that we did not use `.toFuture` above because we are already within a `Future`.
-
-See [Concurrent Programming with Futures](http://twitter.github.io/finagle/guide/Futures.html) for more details.
-
-
-
-
-# Params
+## Params
 
 Query parameters are supported through `request.params`. This supports all the usual `Map` methods you are used to, like `getOrElse`:
 
@@ -230,8 +180,88 @@ get("/hello/:firstName") { req =>
 }
 ```
 
+## Request
 
-# Responses
+You'll notice a `request` object is passed into your routing code, this has useful information about the request:
+
+```scala
+get("/request-info") { request =>
+  println(request.remoteAddress)
+  println(request.path)
+  println(request.userAgent)
+  render.plain("done").toFuture
+}
+```
+
+## Controllers
+
+If you need to organize the actions in different files you can extends `Controller` instead:
+
+```scala
+class UsersController extends Controller {
+  get("/") { request =>
+    // ...
+  }
+  post("/") { request =>
+    // ...
+  }
+  delete("/:id") { request =>
+    // ...
+  }
+}
+```
+
+and then register it in the `PeregringeApp`
+
+```scala
+class MyServer extends PeregrineApp {
+  val usersController = new UsersController()
+  register(usersController)
+}
+```
+You can call `register` multiple times to register various controllers.
+
+You can also define a prefix for each controller you register:
+```scala
+class UsersController extends Controller {
+  get("/") { request =>
+    // ...
+  }
+}
+
+class CompanyController extends Controller {
+  get("/") { request =>
+    // ...
+  }
+}
+
+
+object MyPrefixServer extends PeregrineApp {
+
+  register(new UsersController, "/users") // will respond on GET /users/
+  register(new CompanyController, "/companies") // will respond on GET /companies/
+}
+```
+
+## Futures
+
+Every route is expected to a return a `Future[Response]`, hence all the `.toFuture` calls you've been seeing in our examples. This is an important distinction from synchronous frameworks as all your routes may be executed concurrently instead of one at a time. It's especially useful when dealing with libraries/services that return `Future`'s themselves (like a finagle-http client):
+
+```scala
+get("/current-time") { request =>
+  httpClient.apply("/api/time.txt") map { response =>
+    val currentTime = response.contentString()
+    render.plain("the time is: " + currentTime)
+  }
+}
+```
+
+Note that we did not use `.toFuture` above because we are already within a `Future`.
+
+See [Concurrent Programming with Futures](http://twitter.github.io/finagle/guide/Futures.html) for more details.
+
+
+## Responses
 
 The `render` object is a powerful `Response` builder that allows customizing the response in various ways:
 
@@ -340,7 +370,7 @@ You can imagine more complex views taking constructor arguments and doing things
  -->
 
 
-# Assets
+## Assets
 
 Theres an embedded static file server which will serve out of `src/main/resources/public` by default. It's also possible to render assets inside of routes:
 
@@ -361,7 +391,7 @@ get("/file.txt") { request =>
 
 
 
-# Headers
+## Headers
 
 To read headers, use `request.headerMap`; much like `request.params`, this is also a `Map`
 
@@ -402,7 +432,7 @@ get("/") { request =>
 
 
 
-# Cookies
+## Cookies
 
 Cookies, like `Headers`, are read from `request` and set via `render`:
 
@@ -436,7 +466,7 @@ See the `Cookie` class for more details.
 
 
 
-# Uploads
+## Uploads
 
 Uploads are fully supported in the `request.multiParams` object.
 
@@ -455,7 +485,7 @@ See the `MultipartItem` class for more details.
 
 
 
-# Filters
+## Filters
 
 Filters are code that runs before any request is dispatched to a particular `Controller`. They can modify the incoming request as well as the outbound response. A great example is our own `LogginFilter`:
 
@@ -491,7 +521,7 @@ class LoggingFilter
 You can register these inside `Peregrine` like so:
 
 ```scala
-class MyServer extends PeregrineServer
+class MyServer extends PeregrineApp
   addFilter(new SimpleFilter)
   register(new ExampleController)
 end
@@ -501,7 +531,7 @@ end
 
 
 
-# Logging
+## Logging
 
 There is a `log` log object available inside every `Controller` with the standard error levels (info, warn, error, etc):
 
@@ -520,7 +550,7 @@ post("/profile") { request =>
 
 
 
-# Stats
+## Stats
 
 Theres also a default `[StatsReceiver](https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/stats/StatsReceiver.scala)` object available for recording metrics named `stats`:
 
@@ -547,7 +577,7 @@ See the [HTTP Admin Interface](http://twitter.github.io/twitter-server/Features.
 
 
 
-# Testing
+## Testing
 
 You can unit test your controllers using the MockApp helper:
 
@@ -585,15 +615,26 @@ class AppSpec extends FlatSpecHelper {
 
 
 
-<!--
+
 # Deploying
 
-The `pom.xml` of generated Peregrine projects builds a single, deployable "fatjar" with:
+To generate a deployable single jar "fatjar", you can use [sbt-assembly](https://github.com/sbt/sbt-assembly)
+add the following to `project/plugings.sbt` (if the folder doesn't exists, go ahead an create it)
+```scala
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.0")
+```
+
+and then
 
 ```scala
-mvn package
+sbt assembly
 ```
 
 This produces a runnable jar with scala, peregrine, and any other dependent libraries included inside the `target/` directory.
 
-If you are using Heroku, the included `[Procfile](https://github.com/twitter/peregrine/blob/1.5.3/script/peregrine/share/Procfile)` will work out of the box. -->
+If you are using Heroku, create a `[Procfile](https://github.com/twitter/peregrine/blob/1.5.3/script/peregrine/share/Procfile)` like
+```
+web:    java -Dio.peregrine.config.env=production -Dio.peregrine.config.adminPort='' -Dio.peregrine.config.port=:$PORT -cp target/classes:target/dependency/* app
+```
+
+and it will work out of the box.
