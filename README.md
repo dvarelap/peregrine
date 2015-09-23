@@ -18,7 +18,7 @@ Install dependency in `build.sbt` file:
 ```scala
 scalaVersion := "2.11.7"
 resolvers += "Twitter" at "http://maven.twttr.com"
-libraryDependencies += "com.github.dvarelap" %% "peregrine" % "1.1.0"
+libraryDependencies += "com.github.dvarelap" %% "peregrine" % "1.1.2"
 ```
 
 And run with:
