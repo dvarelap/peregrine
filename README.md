@@ -14,9 +14,10 @@ object WebApp extends PeregrineApp {
 }
 ```
 
-Install dependency in build.sbt file:
+Install dependency in `build.sbt` file:
 ```scala
-resolvers += "dvarelap repo" at "http://dl.bintray.com/dvarelap/maven"
+scalaVersion := "2.11.7"
+resolvers += "Twitter" at "http://maven.twttr.com"
 libraryDependencies += "com.github.dvarelap" %% "peregrine" % "1.1.0"
 ```
 
