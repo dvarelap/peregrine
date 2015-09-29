@@ -194,6 +194,23 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
     this
   }
 
+  private[peregrine] def internal(name: String, status: Int): ResponseBuilder = {
+
+    val fullPath = getClass.getResource(s"/$name").toString
+    val stream   = getClass.getResourceAsStream(s"/$name")
+
+    val bytes   = IOUtils.toByteArray(stream)
+
+    stream.read(bytes)
+
+    val mtype = FileService.extMap.getContentType('.' + fullPath.split('.').last)
+
+    this.status(status)
+    this.header("Content-Type", mtype)
+    this.body(bytes)
+    this
+  }
+
   def build: FinagleResponse  = {
     build(Request())
   }

@@ -13,7 +13,7 @@ trait Controller extends App with Stats {
   val stats                      = statsReceiver.scope("Controller")
   var serializer: JsonSerializer = DefaultJacksonJsonSerializer
 
-  var notFoundHandler: Option[(Request) => Future[ResponseBuilder]] = None
+  var notFoundHandler: Option[(Request) => Future[ResponseBuilder]] = handleNotFound
   var errorHandler   : Option[(Request) => Future[ResponseBuilder]] = None
 
   def get(paths: String*)    (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.GET,      path)(callback)) }
@@ -66,4 +66,10 @@ trait Controller extends App with Stats {
   }
 
   private[peregrine] def withPrefix(prefix: String) = routeList.withPrefix(prefix)
+
+  private[this] def handleNotFound: Option[(Request) => Future[ResponseBuilder]] = {
+    if (config.env() != "development") None
+    else Some(req => render.internal("__peregrine__/404.html", 404).toFuture)
+  }
+
 }

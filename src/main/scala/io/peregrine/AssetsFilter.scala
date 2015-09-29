@@ -7,6 +7,13 @@ import com.twitter.util._
 class AssetsFilter extends SimpleFilter[FinagleRequest, FinagleResponse] with LoggingFilterHelper {
   val logger = PeregrineLogger.logger()
   def apply(req: FinagleRequest, service: Service[FinagleRequest, FinagleResponse]): Future[FinagleResponse] = {
+    if (req.path.startsWith("/__peregrine__/")) {
+      return if (config.debugAssets()){
+        applyLogging(req, request => Future(render.internal(req.path.replace("/__peregrine__", "__peregrine__"), 200).build))
+      } else {
+        Future(render.internal(req.path.replace("/__peregrine__", "__peregrine__"), 200).build)
+      }
+    }
 
     if (req.path.startsWith(config.assetsPathPrefix())) {
       if (config.debugAssets()) {

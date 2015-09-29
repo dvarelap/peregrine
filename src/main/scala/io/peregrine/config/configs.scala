@@ -2,9 +2,16 @@ package io.peregrine.config
 
 import com.twitter.app.GlobalFlag
 
+object env {
+  private[this] val environment = System.getenv("PEREGRINE_ENV") match {
+    case e: String => e
+    case _         => "development"
+  }
+  def apply(): String = environment
+}
+
 object port               extends GlobalFlag[String](":5000", "Http Port")
 object sslPort            extends GlobalFlag[String](":5043", "Https Port")
-object env                extends GlobalFlag[String]("development", "Environment {development |test | production }")
 object pidEnabled         extends GlobalFlag[Boolean](false, "whether to write pid file")
 object pidPath            extends GlobalFlag[String]("", "path to pid file")
 object logPath            extends GlobalFlag[String]("logs/peregrine.log", "path to log")
