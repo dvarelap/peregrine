@@ -9,20 +9,20 @@ import com.twitter.finagle.stats._
 
 trait Controller extends App with Stats {
 
-  val routeList                     = new RouteVector
+  val routeList                  = new RouteVector
   val stats                      = statsReceiver.scope("Controller")
   var serializer: JsonSerializer = DefaultJacksonJsonSerializer
 
   var notFoundHandler: Option[(Request) => Future[ResponseBuilder]] = handleNotFound
   var errorHandler   : Option[(Request) => Future[ResponseBuilder]] = None
 
-  def get(paths: String*)    (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.GET,      path)(callback)) }
-  def delete(paths: String*) (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.DELETE,   path)(callback)) }
-  def post(paths: String*)   (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.POST,     path)(callback)) }
-  def put(paths: String*)    (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.PUT,      path)(callback)) }
-  def head(paths: String*)   (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.HEAD,     path)(callback)) }
-  def patch(paths: String*)  (callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.PATCH,    path)(callback)) }
-  def options(paths: String*)(callback: Request => Future[ResponseBuilder]) { paths.foreach(path => addRoute(HttpMethod.OPTIONS,  path)(callback)) }
+  def get[R](paths: String*)    (callback: Request => R) { paths.foreach(path => addRoute(HttpMethod.GET,      path)(callback)) }
+  def delete[R](paths: String*) (callback: Request => R) { paths.foreach(path => addRoute(HttpMethod.DELETE,   path)(callback)) }
+  def post[R](paths: String*)   (callback: Request => R) { paths.foreach(path => addRoute(HttpMethod.POST,     path)(callback)) }
+  def put[R](paths: String*)    (callback: Request => R) { paths.foreach(path => addRoute(HttpMethod.PUT,      path)(callback)) }
+  def head[R](paths: String*)   (callback: Request => R) { paths.foreach(path => addRoute(HttpMethod.HEAD,     path)(callback)) }
+  def patch[R](paths: String*)  (callback: Request => R) { paths.foreach(path => addRoute(HttpMethod.PATCH,    path)(callback)) }
+  def options[R](paths: String*)(callback: Request => R) { paths.foreach(path => addRoute(HttpMethod.OPTIONS,  path)(callback)) }
 
   def notFound(callback: Request => Future[ResponseBuilder]) { notFoundHandler = Option(callback) }
   def error(callback: Request => Future[ResponseBuilder]) { errorHandler = Option(callback) }
@@ -57,12 +57,23 @@ trait Controller extends App with Stats {
     }
   }
 
-  def addRoute(method: HttpMethod, path: String)(callback: Request => Future[ResponseBuilder]) {
+  def addRoute[R](method: HttpMethod, path: String)(callback: Request => R) {
     val regex = SinatraPathPatternParser(path)
     routeList.add(Route(method, path, regex, (r) => {
       val reqStat = stats.stat("%s/Root/%s".format(method.toString, path.stripPrefix("/")))
-      Stat.timeFuture(reqStat)(callback(r))
+      Stat.timeFuture(reqStat)(coerceFuture(callback(r)))
     }))
+  }
+
+  private[this] def coerceFuture[R](response: R): Future[ResponseBuilder] = response match {
+    case f: Future[_]               => f.map(coerceResponseBuilder)
+    case r: ResponseBuilder         => r.toFuture
+    case other: Any                 => Future(coerceResponseBuilder(other))
+  }
+
+  private[this] def coerceResponseBuilder[R](response: R): ResponseBuilder = response match {
+    case r: ResponseBuilder  => r
+    case _                   => throw new RuntimeException("Result type not recognized")
   }
 
   private[peregrine] def withPrefix(prefix: String) = routeList.withPrefix(prefix)

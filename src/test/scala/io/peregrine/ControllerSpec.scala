@@ -24,6 +24,10 @@ class ControllerSpec extends FlatSpecHelper {
       } yield id + "-" + name
       render.plain(params.getOrElse("nothing")).toFuture
     }
+
+    get("/no-future-test") { req =>
+      render.plain("woooo")
+    }
   }
 
   val server = new PeregrineServer
@@ -61,6 +65,13 @@ class ControllerSpec extends FlatSpecHelper {
 
     get("/api/params/1")
     response.body   should equal ("nothing")
+    response.code   should equal (200)
+
+  }
+
+  "no future test" should "return a correct responsebuilder" in {
+    get("/api/no-future-test")
+    response.body   should equal ("woooo")
     response.code   should equal (200)
 
   }
