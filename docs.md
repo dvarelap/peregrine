@@ -30,7 +30,7 @@ import io.peregrine._
 
 object WebApp extends PeregrineApp {
   get("/hi") { req =>
-    render.plain("Hello World!")
+    "Hello World!"
   }
 }
 ```
@@ -151,7 +151,7 @@ Query parameters are supported through `request.params`. This supports all the u
 ```scala
 get("/search") { request =>
   val query = request.params.getOrElse("q", "dogs")
-  render.plain("you searched for " + query)
+  "you searched for " + query
 }
 ```
 
@@ -160,7 +160,7 @@ Parameters can also be extracted from routes just like in [Sinatra](http://sinat
 ```scala
 get("/hello/:name") { request =>
   val name = request.routeParams.getOrElse("name", "john doe")
-  render.plain("you searced for " + query)
+  "you searced for " + query
 }
 ```
 
@@ -189,7 +189,7 @@ get("/request-info") { request =>
   println(request.remoteAddress)
   println(request.path)
   println(request.userAgent)
-  render.plain("done")
+  "done"
 }
 ```
 
@@ -255,7 +255,7 @@ get("/explicitly") { req =>
 }
 
 get("/explicitly") { req =>
-  render.plain("no toFuture call") // returns Future[ResponseBuilder]
+  "no toFuture call" // returns Future[ResponseBuilder]
 }
 ```
 
@@ -263,9 +263,10 @@ This is especially useful when dealing with libraries/services that return `Futu
 
 ```scala
 get("/current-time") { request =>
+  // returns a Future[ResponseBuilder]
   httpClient.apply("/api/time.txt") map { response =>
     val currentTime = response.contentString()
-    render.plain("the time is: " + currentTime)
+    "the time is: " + currentTime
   }
 }
 ```
@@ -276,6 +277,18 @@ See [Concurrent Programming with Futures](http://twitter.github.io/finagle/guide
 
 
 ## Responses
+
+By default peregrine tries to render your message if you don't explicitly define how should this be done
+
+```scala
+get("/render-string-explicitly") { req =>
+  render.plain("hi!")  // will output  plain "hi!" with status 200
+}
+get("/render-string") { req =>
+  "hi!"  // will also output  plain "hi!" with status 200
+}
+```
+
 
 The `render` object is a powerful `Response` builder that allows customizing the response in various ways:
 
@@ -398,7 +411,7 @@ It's important to note that the `Router` runs _before_ the file server, allowing
 
 ```scala
 get("/file.txt") { request =>
-  render.plain("this is the file")
+  "this is the file"
 }
 ```
 
@@ -412,7 +425,7 @@ To read headers, use `request.headerMap`; much like `request.params`, this is al
 ```scala
 get("/") { request =>
   val isFoo = request.headerMap.getOrElse("X-Foo", "1")
-  render.plain("X-Foo status: " + isFoo)
+  "X-Foo status: " + isFoo
 }
 ```
 
@@ -453,7 +466,7 @@ Cookies, like `Headers`, are read from `request` and set via `render`:
 ```scala
 get("/") { request =>
   val loggedIn = request.cookie("loggedIn").getOrElse("false")
-  render.plain("logged in?:" + loggedIn)
+  "logged in?:" + loggedIn
 }
 ```
 
@@ -490,7 +503,7 @@ post("/profile") { request =>
     println("content type is " + avatar.contentType)
     avatar.writeToFile("/tmp/avatar")
   }
-  render.plain("ok")
+  "ok"
 }
 ```
 
@@ -557,7 +570,7 @@ post("/profile") { request =>
     case exception => log.error(exception, "something bad happened")
   }
   log.info("sending ok")
-  render.plain("ok")
+  "ok"
 }
 ```
 
@@ -580,7 +593,7 @@ post("/profile") { request =>
     case exception => log.error(exception, "something bad happened")
   }
   log.info("sending ok")
-  render.plain("ok")
+  "ok"
 }
 ```
 
@@ -597,8 +610,8 @@ You can unit test your controllers using the MockApp helper:
 
 ```scala
 class SampleController extends Controller {
-  get("/testing") {
-    request => render.plain("hi")
+  get("/testing") { request =>
+    "hi"
   }
 }
 

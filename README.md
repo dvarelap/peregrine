@@ -10,7 +10,7 @@ import io.peregrine._
 
 object WebApp extends PeregrineApp {
   get("/hi") { req =>
-    render.plain("Hello World!")
+    "Hello World!"
   }
 }
 ```

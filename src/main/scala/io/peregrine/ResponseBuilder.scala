@@ -14,14 +14,8 @@ import org.jboss.netty.handler.codec.http.DefaultCookie
 import org.jboss.netty.handler.codec.http.{Cookie => NettyCookie, HttpResponseStatus}
 
 object ResponseBuilder {
-  def apply(body: String): FinagleResponse =
-    new ResponseBuilder().body(body).status(200).build
-
-  def apply(status: Int, body: String): FinagleResponse =
-    new ResponseBuilder().body(body).status(status).build
-
-  def apply(status: Int, body: String, headers: Map[String, String]): FinagleResponse =
-    new ResponseBuilder().body(body).status(status).headers(headers).build
+  def apply(status: Int) = new ResponseBuilder().status(status)
+  def apply(body: Any)   = new ResponseBuilder().body(body)
 }
 
 class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer) extends CommonStatuses {
@@ -110,10 +104,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
     this
   }
 
-  def body(s: String): ResponseBuilder = {
-    this.strBody = Some(s)
-    this
-  }
+
 
   def status(i: Int): ResponseBuilder = {
     this.status = Some(i)
@@ -138,10 +129,42 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
     this
   }
 
+  def body(s: String): ResponseBuilder = {
+    this.strBody = Some(s)
+    this
+  }
+
   def body(b: Array[Byte]): ResponseBuilder = {
     this.binBody = Some(b)
     this
   }
+
+  def body(body: Any): ResponseBuilder = {
+    body match {
+      case null => nothing
+      // case buf: Buf => body(buf)
+      case bytes: Array[Byte] => this.body(bytes)
+      // case cbos: ChannelBuffer => body(cbos)
+      case "" => nothing
+      case Unit => nothing
+      case opt if opt == None => nothing
+      case str: String => this.body(str)
+      case _file: File => static(_file.toString)
+
+      case x: Int     => this.body(x.toString)
+      case x: Long    => this.body(x.toString)
+      case x: Short   => this.body(x.toString)
+      case x: Byte    => this.body(x.toString)
+      case x: Double  => this.body(x.toString)
+      case x: Float   => this.body(x.toString)
+      case x: Char    => this.body(x.toString)
+      case x: Boolean => this.body(x.toString)
+      case other => this.body(other.toString)
+      
+    }
+    this
+  }
+
 
   def header(k: String, v: String): ResponseBuilder = {
     this.headers += (k -> v)

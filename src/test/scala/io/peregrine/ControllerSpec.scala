@@ -3,6 +3,7 @@ package io.peregrine
 
 import io.peregrine._
 import io.peregrine.test.FlatSpecHelper
+import com.twitter.util.Future
 
 
 class ControllerSpec extends FlatSpecHelper {
@@ -27,6 +28,18 @@ class ControllerSpec extends FlatSpecHelper {
 
     get("/no-future-test") { req =>
       render.plain("woooo")
+    }
+
+    get("/simpleResponse") { req =>
+      "hello simple world"
+    }
+
+    get("/simpleNumericResponse") { req =>
+      1.1
+    }
+
+    get("/futureWrappedResponse") { req =>
+      Future(true)
     }
   }
 
@@ -73,6 +86,23 @@ class ControllerSpec extends FlatSpecHelper {
     get("/api/no-future-test")
     response.body   should equal ("woooo")
     response.code   should equal (200)
+  }
 
+  "simple response" should "render a correct response" in {
+    get("/api/simpleResponse")
+    response.body   should equal ("hello simple world")
+    response.code   should equal (200)
+  }
+
+  "simple numeric response" should "render a correct response" in {
+    get("/api/simpleNumericResponse")
+    response.body   should equal ("1.1")
+    response.code   should equal (200)
+  }
+
+  "wrapped response" should "render a correct response" in {
+    get("/api/futureWrappedResponse")
+    response.body   should equal ("true")
+    response.code   should equal (200)
   }
 }

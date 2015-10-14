@@ -73,7 +73,7 @@ trait Controller extends App with Stats {
 
   private[this] def coerceResponseBuilder[R](response: R): ResponseBuilder = response match {
     case r: ResponseBuilder  => r
-    case _                   => throw new RuntimeException("Result type not recognized")
+    case other               => ResponseBuilder(other)
   }
 
   private[peregrine] def withPrefix(prefix: String) = routeList.withPrefix(prefix)
