@@ -29,9 +29,11 @@ Minimal app:
 import io.peregrine._
 
 object WebApp extends PeregrineApp {
+
   get("/hi") { req =>
     "Hello World!"
   }
+  
 }
 ```
 
