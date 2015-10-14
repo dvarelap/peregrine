@@ -30,7 +30,7 @@ import io.peregrine._
 
 object WebApp extends PeregrineApp {
   get("/hi") { req =>
-    render.plain("Hello World!").toFuture
+    render.plain("Hello World!")
   }
 }
 ```
@@ -117,7 +117,7 @@ Customize what happens when a route isn't found using `notFound`:
 
 ```scala
 notFound { request =>
-  render.status(404).plain("not found yo").toFuture
+  render.status(404).plain("not found yo")
 }
 ```
 
@@ -129,13 +129,13 @@ class Unauthorized extends Exception
 error { request =>
     request.error match {
       case Some(e:ArithmeticException) =>
-        render.status(500).plain("whoops, divide by zero!").toFuture
+        render.status(500).plain("whoops, divide by zero!")
       case Some(e:Unauthorized) =>
-        render.status(401).plain("Not Authorized!").toFuture
+        render.status(401).plain("Not Authorized!")
       case Some(e:UnsupportedMediaType) =>
-        render.status(415).plain("Unsupported Media Type!").toFuture
+        render.status(415).plain("Unsupported Media Type!")
       case _ =>
-        render.status(500).plain("Something went wrong!").toFuture
+        render.status(500).plain("Something went wrong!")
     }
 }
 
@@ -151,7 +151,7 @@ Query parameters are supported through `request.params`. This supports all the u
 ```scala
 get("/search") { request =>
   val query = request.params.getOrElse("q", "dogs")
-  render.plain("you searched for " + query).toFuture
+  render.plain("you searched for " + query)
 }
 ```
 
@@ -160,7 +160,7 @@ Parameters can also be extracted from routes just like in [Sinatra](http://sinat
 ```scala
 get("/hello/:name") { request =>
   val name = request.routeParams.getOrElse("name", "john doe")
-  render.plain("you searced for " + query).toFuture
+  render.plain("you searced for " + query)
 }
 ```
 
@@ -176,7 +176,7 @@ get("/hello/:firstName") { req =>
     lastName  <- req.param("lastName")
   } yield Person(firstName, lastName)
 
-  render.json(u).toFuture
+  render.json(u)
 }
 ```
 
@@ -189,7 +189,7 @@ get("/request-info") { request =>
   println(request.remoteAddress)
   println(request.path)
   println(request.userAgent)
-  render.plain("done").toFuture
+  render.plain("done")
 }
 ```
 
@@ -245,7 +245,21 @@ object MyPrefixServer extends PeregrineApp {
 
 ## Futures
 
-Every route is expected to a return a `Future[Response]`, hence all the `.toFuture` calls you've been seeing in our examples. This is an important distinction from synchronous frameworks as all your routes may be executed concurrently instead of one at a time. It's especially useful when dealing with libraries/services that return `Future`'s themselves (like a finagle-http client):
+Every route is expected to a return a `Future[Response]`, the framework is prepared to receive a `Future[ResponseBuilder]` or a `ResponseBuilder` that'll be wrapped in a constant future. This is an important distinction from synchronous frameworks as all your routes may be executed concurrently instead of one at a time.
+
+so in the following example both will result in a correct Future[ResponseBuilder]:
+
+```scala
+get("/explicitly") { req =>
+  render.plain("explicitly call to toFuture").toFuture // returns Future[ResponseBuilder]
+}
+
+get("/explicitly") { req =>
+  render.plain("no toFuture call") // returns Future[ResponseBuilder]
+}
+```
+
+This is especially useful when dealing with libraries/services that return `Future`'s themselves (like a finagle-http client):
 
 ```scala
 get("/current-time") { request =>
@@ -256,7 +270,7 @@ get("/current-time") { request =>
 }
 ```
 
-Note that we did not use `.toFuture` above because we are already within a `Future`.
+Note that we did not use `toFuture` above because we are already within a `Future`.
 
 See [Concurrent Programming with Futures](http://twitter.github.io/finagle/guide/Futures.html) for more details.
 
@@ -267,7 +281,7 @@ The `render` object is a powerful `Response` builder that allows customizing the
 
 ```scala
 get("/i-want-json") { request =>
-  render.json(Map("foo" -> "bar")).toFuture
+  render.json(Map("foo" -> "bar"))
 }
 ```
 
@@ -275,7 +289,7 @@ This will automatically set the `Content-Type` as `application/json`.
 
 ```scala
 get("/i-want-html") { request =>
-  render.html("<h1>hi</h1>").toFuture
+  render.html("<h1>hi</h1>")
 }
 ```
 
@@ -283,7 +297,7 @@ Like the example above, this sets `Content-Type` to `text/html`. We can also set
 
 ```scala
 get("/i-want-html") { request =>
-  render.body("custom response").contentType("application/mine").toFuture
+  render.body("custom response").contentType("application/mine")
 }
 ```
 
@@ -294,7 +308,7 @@ get("/i-want-html") { request =>
   render.body("custom response")
         .contentType("application/mine")
         .status(201)
-        .toFuture
+
 }
 ```
 
@@ -305,7 +319,7 @@ get("/i-want-custom") { request =>
   render.status(201)
         .contentType("application/mine")
         .body("custom response")
-        .toFuture
+
 }
 ```
 
@@ -316,7 +330,7 @@ get("/i-want-binary") { request =>
   render.status(201)
         .contentType("application/octet-stream")
         .body(Array[Byte](12, 41, 51))
-        .toFuture
+
 }
 ```
 
@@ -325,9 +339,9 @@ It's also possible to respond conditionally based on `Content-Type` or `Accept` 
 ```scala
 get("/api/thing") { request =>
   respondTo(request) {
-    case _:Html => render.html("<p>html response</p>").toFuture
-    case _:Json => render.json(Map("value" -> "an json response")).toFuture
-    case _:All => render.plain("default fallback response").toFuture
+    case _:Html => render.html("<p>html response</p>")
+    case _:Json => render.json(Map("value" -> "an json response"))
+    case _:All => render.plain("default fallback response")
   }
 }
 ```
@@ -361,7 +375,7 @@ Then `render.view` can be used to display it:
 ```scala
 get("/template") { request =>
   val myView = new MyView
-  render.view(myView).toFuture
+  render.view(myView)
 }
 ```
 
@@ -384,7 +398,7 @@ It's important to note that the `Router` runs _before_ the file server, allowing
 
 ```scala
 get("/file.txt") { request =>
-  render.plain("this is the file").toFuture
+  render.plain("this is the file")
 }
 ```
 
@@ -398,7 +412,7 @@ To read headers, use `request.headerMap`; much like `request.params`, this is al
 ```scala
 get("/") { request =>
   val isFoo = request.headerMap.getOrElse("X-Foo", "1")
-  render.plain("X-Foo status: " + isFoo).toFuture
+  render.plain("X-Foo status: " + isFoo)
 }
 ```
 
@@ -406,7 +420,7 @@ Setting headers is available on the `Response` builder:
 
 ```scala
 get("/") { request =>
-  render.plain("hi").header("Foo", "Bar").toFuture
+  render.plain("hi").header("Foo", "Bar")
 }
 ```
 
@@ -417,7 +431,7 @@ get("/") { request =>
   render.plain("hi")
         .header("Foo", "Bar")
         .header("Biz", "Baz")
-        .toFuture
+
 }
 ```
 
@@ -425,7 +439,7 @@ get("/") { request =>
 get("/") { request =>
   render.plain("hi")
         .headers(Map("Foo" -> "Bar", "Biz" -> "Baz"))
-        .toFuture
+
 }
 ```
 
@@ -439,7 +453,7 @@ Cookies, like `Headers`, are read from `request` and set via `render`:
 ```scala
 get("/") { request =>
   val loggedIn = request.cookie("loggedIn").getOrElse("false")
-  render.plain("logged in?:" + loggedIn).toFuture
+  render.plain("logged in?:" + loggedIn)
 }
 ```
 
@@ -447,7 +461,7 @@ get("/") { request =>
 get("/") { request =>
   render.plain("hi")
         .cookie("loggedIn", "true")
-        .toFuture
+
 }
 ```
 
@@ -457,7 +471,7 @@ Advanced cookies are supported by creating and configuring `Cookie` objects:
 get("/") { request =>
   val c = DefaultCookie("Biz", "Baz")
   c.setSecure(true)
-  render.plain("get:path").cookie(c).toFuture
+  render.plain("get:path").cookie(c)
 }
 ```
 
@@ -476,7 +490,7 @@ post("/profile") { request =>
     println("content type is " + avatar.contentType)
     avatar.writeToFile("/tmp/avatar")
   }
-  render.plain("ok").toFuture
+  render.plain("ok")
 }
 ```
 
@@ -543,7 +557,7 @@ post("/profile") { request =>
     case exception => log.error(exception, "something bad happened")
   }
   log.info("sending ok")
-  render.plain("ok").toFuture
+  render.plain("ok")
 }
 ```
 
@@ -566,7 +580,7 @@ post("/profile") { request =>
     case exception => log.error(exception, "something bad happened")
   }
   log.info("sending ok")
-  render.plain("ok").toFuture
+  render.plain("ok")
 }
 ```
 
@@ -584,7 +598,7 @@ You can unit test your controllers using the MockApp helper:
 ```scala
 class SampleController extends Controller {
   get("/testing") {
-    request => render.plain("hi").toFuture
+    request => render.plain("hi")
   }
 }
 
