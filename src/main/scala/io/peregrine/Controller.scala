@@ -1,17 +1,16 @@
 package io.peregrine
 
-import io.peregrine.jackson.DefaultJacksonJsonSerializer
+import io.peregrine.jackson._
 import com.twitter.app.App
 import com.twitter.server.Stats
 import com.twitter.util.Future
 import org.jboss.netty.handler.codec.http._
 import com.twitter.finagle.stats._
 
-trait Controller extends App with Stats {
+trait Controller extends App with Stats with ResponseHandler {
 
   val routeList                  = new RouteVector
   val stats                      = statsReceiver.scope("Controller")
-  var serializer: JsonSerializer = DefaultJacksonJsonSerializer
 
   var notFoundHandler: Option[(Request) => Future[ResponseBuilder]] = handleNotFound
   var errorHandler   : Option[(Request) => Future[ResponseBuilder]] = None
@@ -27,7 +26,6 @@ trait Controller extends App with Stats {
   def notFound(callback: Request => Future[ResponseBuilder]) { notFoundHandler = Option(callback) }
   def error(callback: Request => Future[ResponseBuilder]) { errorHandler = Option(callback) }
 
-  def render: ResponseBuilder = new ResponseBuilder(serializer)
   def route: Router = new Router(this)
 
   def redirect(location: String, message: String = "", permanent: Boolean = false): ResponseBuilder = {

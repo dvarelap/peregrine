@@ -147,20 +147,20 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
       // case cbos: ChannelBuffer => body(cbos)
       case "" => nothing
       case Unit => nothing
-      case opt if opt == None => nothing
-      case str: String => this.body(str)
+      case None => nothing
+      case str: String => plain(str)
       case _file: File => static(_file.toString)
 
-      case x: Int     => this.body(x.toString)
-      case x: Long    => this.body(x.toString)
-      case x: Short   => this.body(x.toString)
-      case x: Byte    => this.body(x.toString)
-      case x: Double  => this.body(x.toString)
-      case x: Float   => this.body(x.toString)
-      case x: Char    => this.body(x.toString)
-      case x: Boolean => this.body(x.toString)
+      case x: Int     => plain(x.toString)
+      case x: Long    => plain(x.toString)
+      case x: Short   => plain(x.toString)
+      case x: Byte    => plain(x.toString)
+      case x: Double  => plain(x.toString)
+      case x: Float   => plain(x.toString)
+      case x: Char    => plain(x.toString)
+      case x: Boolean => plain(x.toString)
       case other => this.body(other.toString)
-      
+
     }
     this
   }

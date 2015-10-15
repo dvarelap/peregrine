@@ -33,7 +33,7 @@ object WebApp extends PeregrineApp {
   get("/hi") { req =>
     "Hello World!"
   }
-  
+
 }
 ```
 
@@ -119,7 +119,7 @@ Customize what happens when a route isn't found using `notFound`:
 
 ```scala
 notFound { request =>
-  render.status(404).plain("not found yo")
+  status(404).plain("not found yo")
 }
 ```
 
@@ -131,13 +131,13 @@ class Unauthorized extends Exception
 error { request =>
     request.error match {
       case Some(e:ArithmeticException) =>
-        render.status(500).plain("whoops, divide by zero!")
+        status(500).plain("whoops, divide by zero!")
       case Some(e:Unauthorized) =>
-        render.status(401).plain("Not Authorized!")
+        status(401).plain("Not Authorized!")
       case Some(e:UnsupportedMediaType) =>
-        render.status(415).plain("Unsupported Media Type!")
+        status(415).plain("Unsupported Media Type!")
       case _ =>
-        render.status(500).plain("Something went wrong!")
+        status(500).plain("Something went wrong!")
     }
 }
 
@@ -178,7 +178,7 @@ get("/hello/:firstName") { req =>
     lastName  <- req.param("lastName")
   } yield Person(firstName, lastName)
 
-  render.json(u)
+  json(u)
 }
 ```
 
@@ -296,7 +296,7 @@ The `render` object is a powerful `Response` builder that allows customizing the
 
 ```scala
 get("/i-want-json") { request =>
-  render.json(Map("foo" -> "bar"))
+  json(Map("foo" -> "bar")) // will render json map
 }
 ```
 
@@ -304,7 +304,7 @@ This will automatically set the `Content-Type` as `application/json`.
 
 ```scala
 get("/i-want-html") { request =>
-  render.html("<h1>hi</h1>")
+  html("<h1>hi</h1>") // will render html code
 }
 ```
 
@@ -312,11 +312,11 @@ Like the example above, this sets `Content-Type` to `text/html`. We can also set
 
 ```scala
 get("/i-want-html") { request =>
-  render.body("custom response").contentType("application/mine")
+  body("custom response").contentType("application/mine")
 }
 ```
 
-Because it's a builder, you can chain the methods in any order. Let's add a `201` to that response:
+If you want to extra data and because `render` it's a builder, you can chain the methods in any order. Let's add a `201` to that response:
 
 ```scala
 get("/i-want-html") { request =>
@@ -354,14 +354,12 @@ It's also possible to respond conditionally based on `Content-Type` or `Accept` 
 ```scala
 get("/api/thing") { request =>
   respondTo(request) {
-    case _:Html => render.html("<p>html response</p>")
-    case _:Json => render.json(Map("value" -> "an json response"))
-    case _:All => render.plain("default fallback response")
+    case _:Html => html("<p>html response</p>")
+    case _:Json => json(Map("value" -> "an json response"))
+    case _:All => "default fallback response"
   }
 }
 ```
-
-See the `Response` class for more details.
 
 
 
@@ -405,7 +403,7 @@ Theres an embedded static file server which will serve out of `src/main/resource
 
 ```scala
 get("/deal-with-it") { request =>
-  render.static("/dealwithit.gif")
+  static("/dealwithit.gif")
 }
 ```
 
@@ -435,7 +433,7 @@ Setting headers is available on the `Response` builder:
 
 ```scala
 get("/") { request =>
-  render.plain("hi").header("Foo", "Bar")
+  plain("hi").header("Foo", "Bar")
 }
 ```
 
@@ -443,17 +441,17 @@ You can call `header` multiple times or pass a map to `headers`:
 
 ```scala
 get("/") { request =>
-  render.plain("hi")
-        .header("Foo", "Bar")
-        .header("Biz", "Baz")
+  plain("hi")
+    .header("Foo", "Bar")
+    .header("Biz", "Baz")
 
 }
 ```
 
 ```scala
 get("/") { request =>
-  render.plain("hi")
-        .headers(Map("Foo" -> "Bar", "Biz" -> "Baz"))
+  plain("hi")
+    .headers(Map("Foo" -> "Bar", "Biz" -> "Baz"))
 
 }
 ```
@@ -474,8 +472,8 @@ get("/") { request =>
 
 ```scala
 get("/") { request =>
-  render.plain("hi")
-        .cookie("loggedIn", "true")
+  plain("hi")
+    .cookie("loggedIn", "true")
 
 }
 ```
@@ -486,7 +484,8 @@ Advanced cookies are supported by creating and configuring `Cookie` objects:
 get("/") { request =>
   val c = DefaultCookie("Biz", "Baz")
   c.setSecure(true)
-  render.plain("get:path").cookie(c)
+  plain("get:path")
+    .cookie(c)
 }
 ```
 
@@ -510,8 +509,6 @@ post("/profile") { request =>
 ```
 
 See the `MultipartItem` class for more details.
-
-
 
 
 ## Filters
