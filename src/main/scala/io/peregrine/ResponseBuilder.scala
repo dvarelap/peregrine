@@ -44,9 +44,9 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
   }
 
   private def _setContentView(resp: HttpResponse, view: View): Unit = {
-    view._csrf = csrfToken
-    val out = view.render
-    val bytes = out.getBytes(UTF_8)
+    view._csrf  = csrfToken
+    val out     = view.render
+    val bytes   = out.getBytes(UTF_8)
     resp.headers.set("Content-Length", bytes.length)
     if (view.contentType.isDefined && !resp.headers.contains("Content-Type")) {
       resp.headers.set("Content-Type", view.contentType.get)

@@ -13,7 +13,7 @@ trait Controller extends App with Stats with ResponseHandler {
   val stats                      = statsReceiver.scope("Controller")
 
   var notFoundHandler: Option[(Request) => Future[ResponseBuilder]] = handleNotFound
-  var errorHandler   : Option[(Request) => Future[ResponseBuilder]] = None
+  var errorHandler   : Option[(Request) => Future[ResponseBuilder]] = handleError
 
   def get[R](paths: String*)    (callback: Request => R) { paths.foreach(path => addRoute(HttpMethod.GET,      path)(callback)) }
   def delete[R](paths: String*) (callback: Request => R) { paths.foreach(path => addRoute(HttpMethod.DELETE,   path)(callback)) }
@@ -81,4 +81,19 @@ trait Controller extends App with Stats with ResponseHandler {
     else Some(req => render.internal("__peregrine__/404.html", 404).toFuture)
   }
 
+  private[this] def handleError: Option[(Request) => Future[ResponseBuilder]] = {
+    if (config.env() != "development") None
+    else Some(buildDevErrorHandler)
+  }
+
+  private[this] def buildDevErrorHandler = { req: Request =>
+    req.error match {
+      case Some(e: Throwable) =>
+      render
+        // .internal("__peregrine__/error.html", 500)
+        .view(new ErrorView(e))
+        .toFuture
+      case _ => render.plain("unknown error thrown").toFuture
+    }
+  }
 }
