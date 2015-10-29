@@ -19,21 +19,27 @@ object ResponseBuilder {
 }
 
 class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer) extends CommonStatuses {
-  private var status        : Option[Int]           = None
-  private var headers       : Map[String, String]   = Map()
-  private var strBody       : Option[String]        = None
-  private var binBody       : Option[Array[Byte]]   = None
-  private var json          : Option[Any]           = None
-  private var view          : Option[View]          = None
-  private var buffer        : Option[ChannelBuffer] = None
-  private var cookies       : List[Cookie]          = List()
-  private var csrfToken     : Option[String]        = None
-  private var jsonSerializer: JsonSerializer        = serializer
+  private var status             : Option[Int]           = None
+  private var headers            : Map[String, String]   = Map()
+  private var strBody            : Option[String]        = None
+  private var binBody            : Option[Array[Byte]]   = None
+  private var json               : Option[Any]           = None
+  private var view               : Option[View]          = None
+  private var buffer             : Option[ChannelBuffer] = None
+  private var cookies            : List[Cookie]          = List()
+  private var csrfToken          : Option[String]        = None
+  private var jsonSerializer     : JsonSerializer        = serializer
+  private var viewRendererHolder : ViewRendererHolder    = ViewRendererHolder
 
   def contentType: Option[String] = this.headers.get("Content-Type")
 
   def withSerializer(serializer: JsonSerializer) = {
     jsonSerializer = serializer
+    this
+  }
+
+  def withViewRendererHolder(holder: ViewRendererHolder) = {
+    viewRendererHolder = holder
     this
   }
 
@@ -45,7 +51,11 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
 
   private def _setContentView(resp: HttpResponse, view: View): Unit = {
     view._csrf  = csrfToken
-    val out     = view.render
+
+    val out     = viewRendererHolder.find(view.format) match {
+      case Some(renderer) => renderer.render(view.template, view) // rendereing view-wrapper model for csrf support
+      case _              => throw new IllegalArgumentException(s"ViewRenderer not found for format [${view.format}]")
+    }
     val bytes   = out.getBytes(UTF_8)
     resp.headers.set("Content-Length", bytes.length)
     if (view.contentType.isDefined && !resp.headers.contains("Content-Type")) {
@@ -182,7 +192,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
     this
   }
 
-  def view(v: View): ResponseBuilder = {
+  private[peregrine] def view(v: View): ResponseBuilder = {
     this.view = Some(v)
     this
   }

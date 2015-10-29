@@ -94,15 +94,11 @@ class ExampleSpec extends FlatSpecHelper {
      *
      * curl http://localhost:7070/template
      */
-    class AnView extends View {
-      val template = "an_view.mustache"
-      val some_val = "random value here"
-      override def render: String = "Your value is random value here"
-    }
+    class AnView extends View("example_test", "mock.test", "Your value is random value here")
 
     get("/template") { request =>
       val anView = new AnView
-      render.view(anView).toFuture
+      render.view(anView)
     }
 
 
@@ -135,6 +131,9 @@ class ExampleSpec extends FlatSpecHelper {
           render.status(401).plain("Not Authorized!").toFuture
         case Some(e:UnsupportedMediaType) =>
           render.status(415).plain("Unsupported Media Type!").toFuture
+        case Some(e:Exception) =>
+          e.printStackTrace
+          render.status(500).plain("Something went wrong!").toFuture
         case _ =>
           render.status(500).plain("Something went wrong!").toFuture
       }
@@ -224,8 +223,12 @@ class ExampleSpec extends FlatSpecHelper {
 
   /* ###END_APP### */
 
-  val server = new PeregrineServer
-  server.register(new ExampleApp)
+  val server = new PeregrineServer()
+  server.register(new ExampleApp())
+  server.registerViewRenderer(new ViewRenderer() {
+    val format = "example_test"
+    def render(template: String, view: View): String = s"${view.model}"
+  })
 
   /* ###BEGIN_SPEC### */
 

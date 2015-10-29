@@ -43,4 +43,3 @@ class ControllerCollection {
     controllers = controllers ++ Seq(controller)
   }
 }
-

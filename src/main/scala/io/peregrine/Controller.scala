@@ -89,9 +89,10 @@ trait Controller extends App with Stats with ResponseHandler {
   private[this] def buildDevErrorHandler = { req: Request =>
     req.error match {
       case Some(e: Throwable) =>
+      e.printStackTrace()
       render
-        // .internal("__peregrine__/error.html", 500)
-        .view(new ErrorView(e))
+        .internal("__peregrine__/error.html", 500)
+        // .view(new ErrorView(e)) // TODO fix this
         .toFuture
       case _ => render.plain("unknown error thrown").toFuture
     }

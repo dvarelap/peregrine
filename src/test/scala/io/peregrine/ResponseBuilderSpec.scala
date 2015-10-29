@@ -4,14 +4,15 @@ import com.twitter.finagle.http.Status
 import org.jboss.netty.buffer.ChannelBuffers
 import org.jboss.netty.util.CharsetUtil.UTF_8
 
-class MockView(val title: String) extends View {
-  val template = "mock.mustache"
-  override def render: String = title
-}
-
 class ResponseBuilderSpec extends ShouldSpec {
-  def resp = new ResponseBuilder
-  def view = new MockView("howdy view")
+  def resp = new ResponseBuilder {
+    withViewRendererHolder(new ViewRendererHolder {
+      register("view_test", new ViewRenderer {
+        def format: String = "view_test"
+        def render(template: String, view: View): String = s"${view.model}"
+      })
+    })
+  }
   def buffer = ChannelBuffers.wrappedBuffer("buffer".getBytes(UTF_8))
 
   ".status(201)" should "return a 201 response" in {
@@ -74,6 +75,7 @@ class ResponseBuilderSpec extends ShouldSpec {
   }
 
   ".view()" should "return a 200 view response" in {
+    val view = View("view_test", "test.hbs", "howdy view")
     val response = resp.view(view)
     val built = response.build
     val body = built.getContent().toString(UTF_8)
