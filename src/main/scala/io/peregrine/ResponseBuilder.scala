@@ -14,32 +14,32 @@ import org.jboss.netty.handler.codec.http.DefaultCookie
 import org.jboss.netty.handler.codec.http.{Cookie => NettyCookie, HttpResponseStatus}
 
 object ResponseBuilder {
-  def apply(body: String): FinagleResponse =
-    new ResponseBuilder().body(body).status(200).build
-
-  def apply(status: Int, body: String): FinagleResponse =
-    new ResponseBuilder().body(body).status(status).build
-
-  def apply(status: Int, body: String, headers: Map[String, String]): FinagleResponse =
-    new ResponseBuilder().body(body).status(status).headers(headers).build
+  def apply(status: Int) = new ResponseBuilder().status(status)
+  def apply(body: Any)   = new ResponseBuilder().body(body)
 }
 
 class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer) extends CommonStatuses {
-  private var status        : Option[Int]           = None
-  private var headers       : Map[String, String]   = Map()
-  private var strBody       : Option[String]        = None
-  private var binBody       : Option[Array[Byte]]   = None
-  private var json          : Option[Any]           = None
-  private var view          : Option[View]          = None
-  private var buffer        : Option[ChannelBuffer] = None
-  private var cookies       : List[Cookie]          = List()
-  private var csrfToken     : Option[String]        = None
-  private var jsonSerializer: JsonSerializer        = serializer
+  private var status             : Option[Int]           = None
+  private var headers            : Map[String, String]   = Map()
+  private var strBody            : Option[String]        = None
+  private var binBody            : Option[Array[Byte]]   = None
+  private var json               : Option[Any]           = None
+  private var view               : Option[View]          = None
+  private var buffer             : Option[ChannelBuffer] = None
+  private var cookies            : List[Cookie]          = List()
+  private var csrfToken          : Option[String]        = None
+  private var jsonSerializer     : JsonSerializer        = serializer
+  private var viewRendererHolder : ViewRendererHolder    = ViewRendererHolder
 
   def contentType: Option[String] = this.headers.get("Content-Type")
 
   def withSerializer(serializer: JsonSerializer) = {
     jsonSerializer = serializer
+    this
+  }
+
+  def withViewRendererHolder(holder: ViewRendererHolder) = {
+    viewRendererHolder = holder
     this
   }
 
@@ -50,9 +50,13 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
   }
 
   private def _setContentView(resp: HttpResponse, view: View): Unit = {
-    view._csrf = csrfToken
-    val out = view.render
-    val bytes = out.getBytes(UTF_8)
+    view._csrf  = csrfToken
+
+    val out     = viewRendererHolder.find(view.format) match {
+      case Some(renderer) => renderer.render(view.template, view) // rendereing view-wrapper model for csrf support
+      case _              => throw new IllegalArgumentException(s"ViewRenderer not found for format [${view.format}]")
+    }
+    val bytes   = out.getBytes(UTF_8)
     resp.headers.set("Content-Length", bytes.length)
     if (view.contentType.isDefined && !resp.headers.contains("Content-Type")) {
       resp.headers.set("Content-Type", view.contentType.get)
@@ -110,10 +114,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
     this
   }
 
-  def body(s: String): ResponseBuilder = {
-    this.strBody = Some(s)
-    this
-  }
+
 
   def status(i: Int): ResponseBuilder = {
     this.status = Some(i)
@@ -138,10 +139,42 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
     this
   }
 
+  def body(s: String): ResponseBuilder = {
+    this.strBody = Some(s)
+    this
+  }
+
   def body(b: Array[Byte]): ResponseBuilder = {
     this.binBody = Some(b)
     this
   }
+
+  def body(body: Any): ResponseBuilder = {
+    body match {
+      case null => nothing
+      // case buf: Buf => body(buf)
+      case bytes: Array[Byte] => this.body(bytes)
+      // case cbos: ChannelBuffer => body(cbos)
+      case "" => nothing
+      case Unit => nothing
+      case None => nothing
+      case str: String => plain(str)
+      case _file: File => static(_file.toString)
+
+      case x: Int     => plain(x.toString)
+      case x: Long    => plain(x.toString)
+      case x: Short   => plain(x.toString)
+      case x: Byte    => plain(x.toString)
+      case x: Double  => plain(x.toString)
+      case x: Float   => plain(x.toString)
+      case x: Char    => plain(x.toString)
+      case x: Boolean => plain(x.toString)
+      case other => this.body(other.toString)
+
+    }
+    this
+  }
+
 
   def header(k: String, v: String): ResponseBuilder = {
     this.headers += (k -> v)
@@ -159,7 +192,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
     this
   }
 
-  def view(v: View): ResponseBuilder = {
+  private[peregrine] def view(v: View): ResponseBuilder = {
     this.view = Some(v)
     this
   }

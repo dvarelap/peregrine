@@ -14,7 +14,11 @@ import com.twitter.server.TwitterServer
 import com.twitter.util.Await
 import com.twitter.conversions.storage._
 
-class PeregrineServer extends TwitterServer with PeregrineLogger {
+class PeregrineServer
+  extends TwitterServer
+  with ViewsEnabled
+  with PeregrineLogger {
+
   override lazy val log = logger()
 
   val controllers:  ControllerCollection = new ControllerCollection

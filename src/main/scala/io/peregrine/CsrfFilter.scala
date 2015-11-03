@@ -28,7 +28,7 @@ class CsrfFilter extends SimpleFilter[FinagleRequest, FinagleResponse] with Sess
         authToken   <- Future(req.cookies.getOrElse("_authenticity_token", buildVoidCookie).value)
         paramToken  <- Future(req.params.getOrElse("_csrf_token", ""))
         res         <- if (csrfToken == paramToken && csrfToken == authToken) service(req)
-                       else Future(ResponseBuilder(403, "CSRF failed"))
+                       else Future(new ResponseBuilder().status(403).body("CSRF failed").build)
       } yield res
     }
   }

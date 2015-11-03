@@ -5,39 +5,41 @@ import com.twitter.finagle.http.Cookie
 
 class CsrfFilterSpec extends ShouldSpec with FlatSpecHelper {
 
-  class MockView extends View {
-    val template = "mock.mustache"
-    override def render: String = csrfToken.getOrElse("token_not_found")
-  }
+  class MockView extends View("csrf_test", "mock.test", "")
 
-  override def server: PeregrineServer = new PeregrineServer {
-    addFilter(new CsrfFilter {
-      override def generateToken = "TEST_TOKEN"
-    })
-    register(testController)
-  }
+  override val server: PeregrineServer = new PeregrineServer()
+  server.addFilter(new CsrfFilter {
+    override def generateToken = "TEST_TOKEN"
+  })
 
+  server.register(testController)
+  server.registerViewRenderer(new ViewRenderer() {
+    val format = "csrf_test"
+    def render(template: String, view: View): String = {
+      view.csrfToken.getOrElse("token_not_found")
+    }
+  })
   // default behaviour
   object testController extends Controller {
 
     get("/get_with_no_problems") { req =>
-      render.plain("no error").toFuture
+      render.plain("no error")
     }
 
     post("/get_with_no_problems") { req =>
-      render.plain("no error").toFuture
+      render.plain("no error")
     }
 
     post("/post_with_no_csrf_token") { req =>
-      render.plain("souldn't see this").toFuture
+      render.plain("souldn't see this")
     }
 
     post("/to_view") { req =>
-      render.view(new MockView()).toFuture
+      render.view(new MockView())
     }
 
     get("/to_view") { req =>
-      render.view(new MockView()).toFuture
+      render.view(new MockView())
     }
   }
 
