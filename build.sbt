@@ -13,7 +13,7 @@ lazy val peregrine = (project in file("."))
   .settings(
     organization := "com.github.dvarelap",
     name := "peregrine",
-    version := "1.2.0-SNAPSHOT",
+    version := "1.2.0",
     scalaVersion := "2.11.7",
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
     publishMavenStyle := true,
