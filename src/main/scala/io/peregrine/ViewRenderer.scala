@@ -1,6 +1,7 @@
 package io.peregrine
 
 import scala.collection.mutable
+import io.peregrine.view._
 
 trait ViewRenderer {
   def format: String
@@ -22,7 +23,7 @@ object ViewRendererHolder extends ViewRendererHolder
 trait ViewsEnabled {
 
   // Default renderers
-  registerViewRenderer(HbsViewRenderer)
+  registerViewRenderer(MustacheViewRenderer)
 
   def registerViewRenderer(renderer: ViewRenderer): Unit = {
     if (renderer.format == null || renderer.format == "") {
