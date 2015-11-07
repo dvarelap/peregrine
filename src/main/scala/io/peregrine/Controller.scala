@@ -7,7 +7,10 @@ import com.twitter.util.Future
 import org.jboss.netty.handler.codec.http._
 import com.twitter.finagle.stats._
 
-trait Controller extends App with Stats with ResponseHandler {
+trait Controller extends App
+                 with Stats
+                 with ResponseHandler
+                 with ViewResponseHandler {
 
   val routeList                  = new RouteVector
   val stats                      = statsReceiver.scope("Controller")

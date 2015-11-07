@@ -5,6 +5,7 @@
 *   [Params](#Params)
 *   [Request](#Request)
 *   [Controllers](#Controllers)
+*   [Templates](#Templates)
 *   [Futures](#Futures)
 *   [Responses](#Responses)
 *   [Assets](#Assets)
@@ -19,7 +20,7 @@
 
 
 
-<!-- *   [Templates](#templates) -->
+
 
 
 ## Getting Started
@@ -39,9 +40,11 @@ object WebApp extends PeregrineApp {
 
 Install dependency in build.sbt file:
 ```scala
-resolvers += "dvarelap repo" at "http://dl.bintray.com/dvarelap/maven"
+scalaVersion := "2.11.7"
 
-libraryDependencies += "com.github.dvarelap" %% "peregrine" % "1.1.0"
+resolvers += "Twitter" at "http://maven.twttr.com"
+
+libraryDependencies += "com.github.dvarelap" %% "peregrine" % "1.2.1"
 ```
 
 And run with:
@@ -244,6 +247,34 @@ object MyPrefixServer extends PeregrineApp {
   register(new CompanyController, "/companies") // will respond on GET /companies/
 }
 ```
+
+## Templates
+Peregrine supports mustache templates system. By default, this will look into `views` folder for the template resources
+
+you have a template like:
+```html
+<!-- views/user.mustache -->
+<h1>Hello {{model.name}} you're {{model.age}}</h1>
+```
+
+and render it using the method `mustache`:
+```scala
+User(name: String, age: Int)
+get("/view") { req =>
+  mustache("user", User("Matt", 16))
+}
+```
+
+this will output:
+```html
+<h1>Hello Matt you're 16</h1>
+```
+
+As you can see peregrine exposes the value with the name `model` within the templates, so it's possible to
+access those values using `{{model.name}}`
+
+
+**Note:** Mustache is natively supported through [Mustache.java](https://github.com/spullara/mustache.java).
 
 ## Futures
 
@@ -657,6 +688,12 @@ sbt assembly
 ```
 
 This produces a runnable jar with scala, peregrine, and any other dependent libraries included inside the `target/` directory.
+
+*Note:* If mustache views are being used, it's required to specify the resource directory in order to include them in the fatjar
+
+```scala
+resourceDirectory in Compile := baseDirectory.value / "app"
+```
 
 If you are using Heroku, create a [Procfile](https://github.com/twitter/peregrine/blob/1.5.3/script/peregrine/share/Procfile) like
 ```
