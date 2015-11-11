@@ -35,8 +35,8 @@ class ErrorHandlerSpec extends FlatSpecHelper {
   }
 
   val server = new PeregrineServer
-  server.register(new HandlingCtrl)
-  server.register(new FailingCtrl)
+  server.register(new HandlingCtrl())
+  server.register(new FailingCtrl())
 
   "ErrorHandler" should "handle exceptions" in {
     get("/handled")

@@ -17,9 +17,7 @@ object RequestAdapter {
     if (request.method == HttpMethod.POST && HttpPostRequestDecoder.isMultipart(request)) {
       request.multiParams = MultipartParsing(request)
     }
-
     request.getContent().resetReaderIndex()
-
     request
   }
 }

@@ -27,7 +27,9 @@ trait Controller extends App
   def options[R](paths: String*)(callback: Request => R) { paths.foreach(path => addRoute(HttpMethod.OPTIONS,  path)(callback)) }
 
   def notFound(callback: Request => Future[ResponseBuilder]) { notFoundHandler = Option(callback) }
-  def error(callback: Request => Future[ResponseBuilder]) { errorHandler = Option(callback) }
+  def error(callback: Request => Future[ResponseBuilder]) {
+    errorHandler = Option(callback)
+  }
 
   def route: Router = new Router(this)
 
@@ -91,12 +93,19 @@ trait Controller extends App
 
   private[this] def buildDevErrorHandler = { req: Request =>
     req.error match {
-      case Some(e: Throwable) =>
-      // e.printStackTrace()
-      render
-        // .internal("__peregrine__/error.html", 500)
-        .internalMustache("__peregrine__/error.html.mustache", 500, e)
-        .toFuture
+
+      case Some(e: Exception) =>
+        PeregrineLogger.logger().error(e, e.getMessage)
+        val format = req.routeParams.getOrElse("format", "")
+        if (format != "" && format == "json") {
+          render
+            .internalErrorJson(500, e, req)
+            .toFuture
+        } else {
+          render
+            .internalError("__peregrine__/error.html.mustache", 500, e, req)
+            .toFuture
+        }
       case _ => render.plain("unknown error thrown").toFuture
     }
   }

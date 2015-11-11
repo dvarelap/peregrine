@@ -160,7 +160,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
       case Unit => nothing
       case None => nothing
       case str: String => plain(str)
-      case _file: File => static(_file.toString)
+      case _file: File => static(_file.getPath)
 
       case x: Int     => plain(x.toString)
       case x: Long    => plain(x.toString)
@@ -170,7 +170,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
       case x: Float   => plain(x.toString)
       case x: Char    => plain(x.toString)
       case x: Boolean => plain(x.toString)
-      case other => this.body(other.toString)
+      case other      => this.body(other.toString)
 
     }
     this
@@ -253,28 +253,35 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
 
     Option(getClass.getResource(s"/$name")) match {
       case Some(res) =>
-        try {
-          val fullPath = res.toString
-          val stream   = getClass.getResourceAsStream(s"/$name")
+        val fullPath = res.toString
+        val stream   = getClass.getResourceAsStream(s"/$name")
 
-          val factory  = MustacheViewFactoryHolder.factory
+        val factory  = MustacheViewFactoryHolder.factory
+        factory.invalidateCaches
 
-          val mustache = factory.compile(new BufferedReader(new InputStreamReader(stream)), name)
-          val output   = new StringWriter
-          mustache.execute(output, new View("mustache", name, model)).flush()
-          val result   = output.toString
-          this.status(status)
-          this.header("Content-Type", "text/html")
-          this.body(result)
-          this
-        } catch {
-          case e: Exception => e.printStackTrace()
-          this
-        }
+        val mustache = factory.compile(new BufferedReader(new InputStreamReader(stream)), name)
+        val output   = new StringWriter
+        mustache.execute(output, new View("mustache", name, model)).flush()
+        val result   = output.toString
+
+        this.status(status)
+        this.header("Content-Type", "text/html")
+        this.body(result)
+        this
+
       case None     =>
         this.body(s"template [$name] not found")
         this
     }
+  }
+
+  private[peregrine] def internalError(name: String, status: Int, ex: Exception, req: Request): ResponseBuilder = {
+    internalMustache(name, status, new ErrorInfo(ex, req, status))
+  }
+
+  private[peregrine] def internalErrorJson(status: Int, ex: Exception, req: Request): ResponseBuilder = {
+    this.json(new ErrorInfo(ex, req, status)).status(status)
+    this
   }
 
 
