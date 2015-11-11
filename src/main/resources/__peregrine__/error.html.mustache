@@ -1,0 +1,159 @@
+<html>
+  <head>
+    <style type="text/css" media="screen">
+      *                         {margin: 0; padding: 0; border: 0; outline: 0;}
+      body                      {background: #EEE; margin: 0; padding: 0;
+                                font-family: 'Lucida Grande', 'Lucida Sans Unicode',
+                                'Garuda';}
+
+      div.clear                 {clear: both;}
+
+      #wrapper                  {width: 1000px; background: #FFFFFF; margin: 0 auto;
+                                 padding: 30px 50px 20px 50px;
+                                 border: 1px solid #DDD;
+                                 margin-top: 20px;
+                                 border-radius:5px;}
+
+      section                   {margin-bottom: 25px;}
+
+      h1                        {font-size: 34px; font-weight: 500; margin-bottom: 7px;}
+
+      #path,
+      h1 strong                 {color: #791414;}
+
+      #footer,
+      #location,
+      #desc                     {color: #000; font-size: 14px;}
+
+      #footer strong,
+      #location strong,
+      #desc strong              {color: #777; font-weight: 500;}
+
+      h3                        {font-size: 18px; font-weight: 500; margin-bottom: 6px;}
+      table                     {font-size: 14px; color: #777; width: 100%;
+                                border: #EEE 1px solid; border-right: none;}
+
+      th                        {text-align: left; color: #000; font-weight: 500;
+                                background: #EEE;}
+
+      td, th                    {padding: 4px 7px; border-right: 1px #EEE solid;}
+
+      tr:hover                  {background: #E7EDF5;}
+
+      .location-desc            {margin-bottom: 4px;}
+
+      td.prop-value             {color: #000;}
+      #request-info .prop-name  {width: 120px;}
+
+      #stack-trace div          {background-color: #111314;
+                                color: #a3a8ae;
+                                min-height: 100%;
+                                overflow: scroll;
+                                padding: 10px;
+                                font-size: 14px;}
+    </style>
+    <title>Something went wrong</title>
+  </head>
+  <body>
+    <div id="wrapper">
+      <section id="header">
+        <h1>
+          <strong>Boom!</strong> Something went wrong at
+          <span id="path">
+            {{model.location}}
+          </span>
+        </h1>
+        <div id="clear"></div>
+        <div id="location">
+          <div class="location-desc"><strong>Description:</strong> {{model.desc}}</div>
+          <div class="location-desc"><strong>Env:</strong> {{model.env}}</div>
+          <div class="location-desc"><strong>File:</strong> {{model.file}} <strong>Line:</strong> {{model.lineNo}}</div>
+        </div>
+
+      </section>
+
+      <div id="clear"></div>
+
+      <section id="request-info">
+        <h3>Request info</h3>
+        <table cellspacing=0 cellpadding=0>
+          <tr>
+            <th class="prop-name">Variable</th>
+            <th>Value</th>
+          </tr>
+          {{#model.reqInfo}}
+            <tr>
+              <td class="prop-name">{{name}}</td>
+              <td class="prop-value">{{value}}</td>
+            </tr>
+
+          {{/model.reqInfo}}
+        </table>
+      </section>
+
+      <section id="params">
+        <h3>Params</h3>
+        <table cellspacing=0 cellpadding=0>
+          <tr>
+            <th class="prop-name">Name</th>
+            <th>Value</th>
+          </tr>
+          {{#model.params}}
+            <tr>
+              <td class="prop-name">{{name}}</td>
+              <td class="prop-value">{{value}}</td>
+            </tr>
+          {{/model.params}}
+        </table>
+      </section>
+
+      <div id="clear"></div>
+
+      <section id="headers">
+        <h3>Headers</h3>
+        <table cellspacing=0 cellpadding=0>
+          <tr>
+            <th class="prop-name">Name</th>
+            <th>Value</th>
+          </tr>
+          {{#model.headers}}
+          <tr>
+            <td class="prop-name">{{name}}</td>
+            <td class="prop-value">{{value}}</td>
+          </tr>
+          {{/model.headers}}
+        </table>
+
+      </section>
+
+      <section id="cookies">
+        <h3>Cookies</h3>
+        <table cellspacing=0 cellpadding=0>
+          <tr>
+            <th class="prop-name">Name</th>
+            <th>Value</th>
+          </tr>
+          {{#model.cookies}}
+          <tr>
+            <td class="prop-name">{{name}}</td>
+            <td class="prop-value">{{value}}</td>
+          </tr>
+          {{/model.cookies}}
+        </table>
+
+      </section>
+
+      <div id="clear"></div>
+
+      <section id="stack-trace">
+        <h3>StackTrace</h3>
+        <div>
+          <pre>{{model.stackTraceLog}}</pre>
+        </div>
+      </section>
+
+      <div id="clear"></div>
+
+    </div>
+  </body>
+</html>

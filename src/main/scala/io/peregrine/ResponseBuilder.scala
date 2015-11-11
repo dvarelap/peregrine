@@ -9,7 +9,8 @@ import com.twitter.finagle.http.{Response => FinagleResponse, Cookie, Status}
 import org.jboss.netty.util.CharsetUtil.UTF_8
 import com.twitter.util.Future
 import org.apache.commons.io.IOUtils
-import java.io.File
+import java.io._
+import io.peregrine.view._
 import org.jboss.netty.handler.codec.http.DefaultCookie
 import org.jboss.netty.handler.codec.http.{Cookie => NettyCookie, HttpResponseStatus}
 
@@ -19,17 +20,17 @@ object ResponseBuilder {
 }
 
 class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer) extends CommonStatuses {
-  private var status             : Option[Int]           = None
-  private var headers            : Map[String, String]   = Map()
-  private var strBody            : Option[String]        = None
-  private var binBody            : Option[Array[Byte]]   = None
-  private var json               : Option[Any]           = None
-  private var view               : Option[View]          = None
-  private var buffer             : Option[ChannelBuffer] = None
-  private var cookies            : List[Cookie]          = List()
-  private var csrfToken          : Option[String]        = None
-  private var jsonSerializer     : JsonSerializer        = serializer
-  private var viewRendererHolder : ViewRendererHolder    = ViewRendererHolder
+  private[this] var status             : Option[Int]           = None
+  private[this] var headers            : Map[String, String]   = Map()
+  private[this] var strBody            : Option[String]        = None
+  private[this] var binBody            : Option[Array[Byte]]   = None
+  private[this] var json               : Option[Any]           = None
+  private[this] var view               : Option[View]          = None
+  private[this] var buffer             : Option[ChannelBuffer] = None
+  private[this] var cookies            : List[Cookie]          = List()
+  private[this] var csrfToken          : Option[String]        = None
+  private[this] var jsonSerializer     : JsonSerializer        = serializer
+  private[this] var viewRendererHolder : ViewRendererHolder    = ViewRendererHolder
 
   def contentType: Option[String] = this.headers.get("Content-Type")
 
@@ -159,7 +160,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
       case Unit => nothing
       case None => nothing
       case str: String => plain(str)
-      case _file: File => static(_file.toString)
+      case _file: File => static(_file.getPath)
 
       case x: Int     => plain(x.toString)
       case x: Long    => plain(x.toString)
@@ -169,7 +170,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
       case x: Float   => plain(x.toString)
       case x: Char    => plain(x.toString)
       case x: Boolean => plain(x.toString)
-      case other => this.body(other.toString)
+      case other      => this.body(other.toString)
 
     }
     this
@@ -195,6 +196,10 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
   private[peregrine] def view(v: View): ResponseBuilder = {
     this.view = Some(v)
     this
+  }
+
+  def mustache(template: String, model: Any, contentType: Option[String] = None) = {
+    view(View("mustache", template, model, contentType))
   }
 
   def buffer(b: ChannelBuffer): ResponseBuilder = {
@@ -243,6 +248,42 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
     this.body(bytes)
     this
   }
+
+  private[peregrine] def internalMustache(name: String, status: Int, model: Any): ResponseBuilder = {
+
+    Option(getClass.getResource(s"/$name")) match {
+      case Some(res) =>
+        val fullPath = res.toString
+        val stream   = getClass.getResourceAsStream(s"/$name")
+
+        val factory  = MustacheViewFactoryHolder.factory
+        factory.invalidateCaches
+
+        val mustache = factory.compile(new BufferedReader(new InputStreamReader(stream)), name)
+        val output   = new StringWriter
+        mustache.execute(output, new View("mustache", name, model)).flush()
+        val result   = output.toString
+
+        this.status(status)
+        this.header("Content-Type", "text/html")
+        this.body(result)
+        this
+
+      case None     =>
+        this.body(s"template [$name] not found")
+        this
+    }
+  }
+
+  private[peregrine] def internalError(name: String, status: Int, ex: Exception, req: Request): ResponseBuilder = {
+    internalMustache(name, status, new ErrorInfo(ex, req, status))
+  }
+
+  private[peregrine] def internalErrorJson(status: Int, ex: Exception, req: Request): ResponseBuilder = {
+    this.json(new ErrorInfo(ex, req, status)).status(status)
+    this
+  }
+
 
   def build: FinagleResponse  = {
     build(Request())

@@ -1,7 +1,7 @@
 package io.peregrine
 
 import com.twitter.finagle.http.{Request => FinagleRequest, Response => FinagleResponse}
-import com.twitter.util.Future
+import com.twitter.util._
 import org.jboss.netty.handler.codec.http.{HttpMethod, QueryStringDecoder}
 import org.jboss.netty.util.CharsetUtil
 
