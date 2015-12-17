@@ -711,7 +711,7 @@ java -jar myApp-0.1.1-SNAPSHOT.jar -io.peregrine.config.port=':4000'
 
 Here's a full list of peregrine's flags available: (try -help to see it)
 
-```scala
+```
 -io.peregrine.config.assetPath          = '/public': path to assets
 -io.peregrine.config.assetsPathPrefix   = '/assets/': the prefix used to prefix assets url
 -io.peregrine.config.certificatePath    = '': path to SSL certificate
