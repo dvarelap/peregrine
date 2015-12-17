@@ -17,10 +17,7 @@
 *   [Stats](#Stats)
 *   [Testing](#Testing)
 *   [Deploying](#deploying)
-
-
-
-
+*   [Configs](#configs)
 
 
 ## Getting Started
@@ -701,3 +698,34 @@ web:    java -Dio.peregrine.config.env=production -Dio.peregrine.config.adminPor
 ```
 
 and it will work out of the box.
+
+
+# Configs
+
+peregrine flags for configuring the app arguments
+
+
+```bash
+java -jar myApp-0.1.1-SNAPSHOT.jar -io.peregrine.config.port=':4000'
+```
+
+Here's a full list of peregrine's flags available: (try -help to see it)
+
+```scala
+-io.peregrine.config.assetPath          = '/public': path to assets
+-io.peregrine.config.assetsPathPrefix   = '/assets/': the prefix used to prefix assets url
+-io.peregrine.config.certificatePath    = '': path to SSL certificate
+-io.peregrine.config.debugAssets        = 'false': enable to show assets requests in logs
+-io.peregrine.config.docRoot            = 'src/main/resources': path to docroot
+-io.peregrine.config.keyPath            = '': path to SSL key
+-io.peregrine.config.logLevel           = 'INFO': log level
+-io.peregrine.config.logNode            = 'peregrine': Logging node
+-io.peregrine.config.logPath            = 'logs/peregrine.log': path to log
+-io.peregrine.config.maxRequestSize     = '5': maximum request size (in megabytes)
+-io.peregrine.config.pidEnabled         = 'false': whether to write pid file
+-io.peregrine.config.pidPath            = '': path to pid file
+-io.peregrine.config.port               = ':5000': Http Port
+-io.peregrine.config.showDirectories    = 'false': allow directory view in asset path
+-io.peregrine.config.sslPort            = ':5043': Https Port
+-io.peregrine.config.templatePath       = '/views': path to templates
+```
