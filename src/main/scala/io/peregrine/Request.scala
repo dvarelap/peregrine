@@ -39,7 +39,14 @@ class Request(val request: FinagleRequest) extends RequestProxy {
   }
 
   def param(key: String): Option[String] = {
-    routeParams.get(key) orElse params.get(key)
+    routeParams.get(key).flatMap {
+      case ""   =>
+        params.get(key).flatMap {
+          case ""    => None
+          case value => Option(value)
+        }
+      case value => Option(value)
+    }
   }
 }
 
