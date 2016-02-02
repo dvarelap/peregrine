@@ -8,4 +8,6 @@ trait Csrf {
 case class View(format: String,
                 template: String,
                 model: Any,
-                contentType: Option[String] = None) extends Csrf
+                contentType: Option[String] = None,
+                message: Option[String] = None,
+                error: Option[String] = None) extends Csrf

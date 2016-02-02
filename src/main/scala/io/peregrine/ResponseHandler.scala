@@ -16,7 +16,12 @@ trait ResponseHandler extends RenderBuilder {
 }
 
 trait ViewResponseHandler extends RenderBuilder {
-  def mustache(template: String, model: Any, contentType: Option[String] = Some("text/html")) = {
-    render.view(View("mustache", template, model, contentType))
+  def mustache(template: String,
+                model: Any,
+                contentType: Option[String] = Some("text/html"),
+                message: Option[String] = None,
+                error: Option[String] = None) = {
+
+    render.view(View("mustache", template, model, contentType, message, error))
   }
 }
