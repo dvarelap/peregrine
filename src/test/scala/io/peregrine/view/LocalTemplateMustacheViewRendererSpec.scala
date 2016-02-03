@@ -3,16 +3,16 @@ package io.peregrine.view
 import io.peregrine._
 
 class MustacheViewRendererSpec extends ShouldSpec {
-  val renderer = new MustacheViewRenderer {
-    override lazy val location: String = "/mustache"
+  val resourceRender = new LocalTemplateMustacheViewRenderer {
+    override val templateRoot = "/src/test/resources/"
   }
 
   "#format" should "be 'mustache'" in {
-    renderer.format should equal("mustache")
+    resourceRender.format should equal("mustache")
   }
 
   "#render" should "form a correct template based on a string" in {
-    val result = renderer.render("test_str", View("mustache", "test_str", "STRING_TEST"))
+    val result = resourceRender.render("test_str", View("mustache", "test_str", "STRING_TEST"))
     removeWhiteSpaces(result) should equal("Result expected: STRING_TEST")
   }
 
@@ -20,7 +20,7 @@ class MustacheViewRendererSpec extends ShouldSpec {
     case class User(name: String, age: Int, opt: Option[String] = None)
 
     val u1 = User("John", 12, None)
-    val result = renderer.render("test_obj", View("mustache", "test_obj", u1))
+    val result = resourceRender.render("test_obj", View("mustache", "test_obj", u1))
     removeWhiteSpaces(result) should equal(
      """Name: John
         |Age: 12
@@ -28,7 +28,7 @@ class MustacheViewRendererSpec extends ShouldSpec {
     )
 
     val u2 = User("Frank", 21, Some("wow"))
-    val result2 = renderer.render("test_obj", View("mustache", "test_obj", u2))
+    val result2 = resourceRender.render("test_obj", View("mustache", "test_obj", u2))
     removeWhiteSpaces(result2) should equal(
       """Name: Frank
         |Age: 21
@@ -43,7 +43,7 @@ class MustacheViewRendererSpec extends ShouldSpec {
       User("John", 12, None),
       User("Frank", 21, Some("wow"))
     )
-    val result = renderer.render("test_seq", View("mustache", "test_seq", seq))
+    val result = resourceRender.render("test_seq", View("mustache", "test_seq", seq))
     removeWhiteSpaces(result) should equal(
       """Name: John
         |  Age: 12

@@ -8,7 +8,6 @@ import com.twitter.util.Future
 
 class ControllerSpec extends FlatSpecHelper {
 
-
   class TestController  extends Controller {
     get("/test") { req =>
       render.plain("success").toFuture

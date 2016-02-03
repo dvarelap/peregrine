@@ -26,44 +26,55 @@ private[peregrine] object MustacheViewFactoryHolder {
   factory.setExecutorService(Executors.newCachedThreadPool)
 }
 
-trait MustacheViewRenderer extends ViewRenderer {
+trait MustacheViewRenderer extends ViewRenderer  {
+  val format  = "mustache"
+  val factory = MustacheViewFactoryHolder.factory
+  val location = MustacheViewFactoryHolder.templatePath
 
-  val format = "mustache"
+  def getPath(templateName: String): Try[Reader]
 
-  lazy val location = MustacheViewFactoryHolder.templatePath
-  lazy val factory  = MustacheViewFactoryHolder.factory
+  def render(templateName: String, view: View): String = {
 
-  def render(templateName: String, view: View) = {
-    if (config.env() == "development") {
-      factory.invalidateCaches()
-    }
-
-    getPath(templateName) match {
-      case None            =>
-        throw new FileNotFoundException(s"""Template file [$templateName] not found in [
-          ${System.getProperty("user.dir")}/app$location,
-          ${getClass.getResource("")}
-        ]""")
-
-      case Some(reader)  =>
-
-        val mustache = factory.compile(reader, templateName)
+    val templatePathName = if (location == "/") s"/$templateName.mustache" else s"$location/$templateName.mustache"
+    getPath(templatePathName) match {
+      case Throw(t)       => throw t
+      case Return(reader)  =>
+        val mustache = factory.compile(reader, templateName + "asdasdq")
         val output   = new StringWriter
         mustache.execute(output, view).flush()
         output.toString
     }
   }
+}
 
-  def getPath(templateName: String): Option[Reader] = {
-    val templatePathName = if (location == "/") s"/$templateName.mustache" else s"$location/$templateName.mustache"
-    val path = s"${System.getProperty("user.dir")}$templatePathName"
-    val file = new File(path)
-    if(file.exists && file.isFile) {
-      Some(new BufferedReader(new InputStreamReader(new FileInputStream(file))))
-    } else {
-      Option(getClass.getResourceAsStream(templatePathName)).map(r => new BufferedReader(new InputStreamReader(r)))
-    }
+trait LocalTemplateMustacheViewRenderer extends MustacheViewRenderer {
+  val templateRoot = config.devTemplateRoot()
+
+  def getPath(templateName: String): Try[Reader] = Try {
+    val path             =  s"${System.getProperty("user.dir")}$templateRoot$templateName"
+    val file             = new File(path)
+    new BufferedReader(new InputStreamReader(new FileInputStream(file)))
   }
 }
 
-object MustacheViewRenderer extends MustacheViewRenderer
+// trait
+trait ResourceMustacheViewRenderer extends MustacheViewRenderer {
+  def getPath(templateName: String): Try[Reader] = Try {
+    val resource = getClass.getResourceAsStream(templateName)
+    val reader   = new BufferedReader(new InputStreamReader(resource))
+    reader
+  }
+
+  // val path             =  s"${System.getProperty("user.dir")}$resourcesRoot/$templatePathName"
+  // val file             = new File(path)
+  // if(file.exists && file.isFile) {
+  //   Some(new BufferedReader(new InputStreamReader(new FileInputStream(file))))
+  // } else {
+  //
+  // }
+}
+
+
+
+object ResourceMustacheViewRenderer     extends ResourceMustacheViewRenderer
+object LocalTemplateMustacheViewRenderer extends LocalTemplateMustacheViewRenderer

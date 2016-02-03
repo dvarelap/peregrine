@@ -9,6 +9,7 @@ trait ViewRenderer {
 }
 
 private[peregrine] trait ViewRendererHolder {
+
   private[this] val map: mutable.Map[String, ViewRenderer] = mutable.Map()
 
   def register(format: String, renderer: ViewRenderer): Unit = map.put(format, renderer)
@@ -20,10 +21,18 @@ private[peregrine] trait ViewRendererHolder {
 
 object ViewRendererHolder extends ViewRendererHolder
 
-trait ViewsEnabled {
+trait ViewsEnabled extends PeregrineLogger {
 
+  lazy val log = logger();
   // Default renderers
-  registerViewRenderer(MustacheViewRenderer)
+  if (config.env() == "dev") {
+    registerViewRenderer(LocalTemplateMustacheViewRenderer)
+    log.info("mustache view renderer LocalTemplateMustacheViewRenderer was regitered")
+  } else {
+    registerViewRenderer(ResourceMustacheViewRenderer)
+    log.info("mustache view renderer ResourceMustacheViewRenderer was regitered")
+  }
+
 
   def registerViewRenderer(renderer: ViewRenderer): Unit = {
     if (renderer.format == null || renderer.format == "") {

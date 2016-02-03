@@ -18,6 +18,7 @@ object logPath            extends GlobalFlag[String]("logs/peregrine.log", "path
 object logLevel           extends GlobalFlag[String]("INFO", "log level")
 object logNode            extends GlobalFlag[String]("peregrine", "Logging node")
 object templatePath       extends GlobalFlag[String]("/views", "path to templates")
+object devTemplateRoot    extends GlobalFlag[String]("/src/main/resources", "root dir for to templates (enables cache)")
 object assetPath          extends GlobalFlag[String]("/public", "path to assets")
 object assetsPathPrefix   extends GlobalFlag[String]("/assets/", "the prefix used to prefix assets url")
 object docRoot            extends GlobalFlag[String]("src/main/resources", "path to docroot")
