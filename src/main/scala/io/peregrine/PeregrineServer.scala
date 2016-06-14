@@ -14,10 +14,7 @@ import com.twitter.server.TwitterServer
 import com.twitter.util.Await
 import com.twitter.conversions.storage._
 
-class PeregrineServer
-    extends TwitterServer
-    // with ViewsEnabled
-    with PeregrineLogger {
+class PeregrineServer extends TwitterServer with PeregrineLogger {
 
   override lazy val log = logger()
 
@@ -35,6 +32,11 @@ class PeregrineServer
   }
 
   override def loggerFactories = loggingFactories
+
+  import PeregrineServer._
+  def register(controllers: ControllerEntry*) {
+    controllers.foreach(ce => register(ce.controller, ce.prefix))
+  }
 
   def register(controller: Controller, pathPrefix: String = "") {
     controller.withPrefix(pathPrefix)
@@ -173,4 +175,10 @@ class DefaultPeregrineServer extends PeregrineServer with PeregrineServerPlugin 
     onServerInit()
     super.main()
   }
+}
+
+object PeregrineServer {
+  case class ControllerEntry(controller: Controller, prefix: String = "")
+  implicit def toControllerEntry(controller: (Controller, String)): ControllerEntry =
+    ControllerEntry(controller._1, controller._2)
 }
