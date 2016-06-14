@@ -168,7 +168,7 @@ class PeregrineServer extends TwitterServer with PeregrineLogger {
   }
 }
 
-abstract class DefaultPeregrineServer extends PeregrineServer with PeregrineServerPlugin {
+abstract class PluggablePeregrineServer extends PeregrineServer with PeregrineServerPlugin {
 
   override def main = {
     onServerInit()
