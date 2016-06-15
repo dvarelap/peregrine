@@ -13,6 +13,7 @@ import com.twitter.finagle.ssl.Ssl
 import com.twitter.server.TwitterServer
 import com.twitter.util.Await
 import com.twitter.conversions.storage._
+import io.peregrine.plugin.PeregrineServerPlugin
 
 class PeregrineServer extends TwitterServer with PeregrineLogger {
 

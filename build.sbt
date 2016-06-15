@@ -4,7 +4,7 @@ name := "peregrine"
 
 organization := "prassee"
 
-version := "0.0.5"
+version := "0.0.6"
 
 scalaVersion := "2.11.7"
 
@@ -18,9 +18,11 @@ libraryDependencies ++= Seq(
   commonsIo,
   jacksonDatabind,
   mustache,
-  scalaExtensions
+  scalaExtensions,
+  peregrineServerPlugin
 )
 
-resolvers += "Twitter" at "http://maven.twttr.com"
+resolvers ++= Seq("moma" at "https://github.com/prassee/moma/raw/master/snapshots",
+  "Twitter" at "http://maven.twttr.com")
 
 scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation")
