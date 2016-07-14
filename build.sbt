@@ -4,7 +4,7 @@ name := "peregrine"
 
 organization := "prassee"
 
-version := "0.0.6"
+version := "0.0.6.4"
 
 scalaVersion := "2.11.7"
 
