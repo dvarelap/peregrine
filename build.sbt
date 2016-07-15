@@ -17,8 +17,6 @@ libraryDependencies ++= Seq(
   jacksonScala,
   commonsIo,
   jacksonDatabind,
-  // mustache,
-  // scalaExtensions,
   peregrineServerPlugin
 )
 

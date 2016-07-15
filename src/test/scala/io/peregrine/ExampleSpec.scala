@@ -225,10 +225,7 @@ class ExampleSpec extends FlatSpecHelper {
 
   val server = new PeregrineServer()
   server.register(new ExampleApp())
-  /*server.registerViewRenderer(new ViewRenderer() {
-    val format = "example_test"
-    def render(template: String, view: View): String = s"${view.model}"
-  })*/
+
 
   /* ###BEGIN_SPEC### */
 
@@ -287,10 +284,6 @@ class ExampleSpec extends FlatSpecHelper {
     response.body should equal("usage description")
   }
 
-  "GET /template" should "respond with a rendered template" in {
-    get("/template")
-    response.body should equal("Your value is random value here")
-  }
 
   "GET /blog/index.json" should "should have json" in {
     get("/blog/index.json")

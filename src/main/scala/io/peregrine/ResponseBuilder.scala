@@ -249,7 +249,7 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
     this
   }
 
-  private[peregrine] def internalMustache(name: String, status: Int, model: Any): ResponseBuilder = {
+/*  private[peregrine] def internalMustache(name: String, status: Int, model: Any): ResponseBuilder = {
 
     Option(getClass.getResource(s"/$name")) match {
       case Some(res) =>
@@ -273,10 +273,11 @@ class ResponseBuilder(serializer: JsonSerializer = DefaultJacksonJsonSerializer)
         this.body(s"template [$name] not found")
         this
     }
-  }
+  }*/
 
   private[peregrine] def internalError(name: String, status: Int, ex: Exception, req: Request): ResponseBuilder = {
-    internalMustache(name, status, new ErrorInfo(ex, req, status))
+    internal(name,status)
+    // internalMustache(name, status, new ErrorInfo(ex, req, status))
   }
 
   private[peregrine] def internalErrorJson(status: Int, ex: Exception, req: Request): ResponseBuilder = {

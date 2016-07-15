@@ -23,7 +23,7 @@ object ViewRendererHolder extends ViewRendererHolder
 trait ViewsEnabled {
 
   // Default renderers
-  registerViewRenderer(MustacheViewRenderer)
+  // registerViewRenderer(MustacheViewRenderer)
 
   def registerViewRenderer(renderer: ViewRenderer): Unit = {
     if (renderer.format == null || renderer.format == "") {
