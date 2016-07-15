@@ -6,7 +6,7 @@ organization := "prassee"
 
 version := "0.0.6.1"
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 publishMavenStyle := true
 

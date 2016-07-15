@@ -3,7 +3,6 @@ package io.peregrine.view
 import io.peregrine._
 import com.github.mustachejava._
 import com.google.common.base.Charsets
-import com.twitter.mustache._
 import com.twitter.util._
 import java.io._
 import java.util.concurrent.Executors
