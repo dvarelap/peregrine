@@ -225,10 +225,10 @@ class ExampleSpec extends FlatSpecHelper {
 
   val server = new PeregrineServer()
   server.register(new ExampleApp())
-  server.registerViewRenderer(new ViewRenderer() {
+  /*server.registerViewRenderer(new ViewRenderer() {
     val format = "example_test"
     def render(template: String, view: View): String = s"${view.model}"
-  })
+  })*/
 
   /* ###BEGIN_SPEC### */
 

@@ -4,7 +4,7 @@ name := "peregrine"
 
 organization := "prassee"
 
-version := "0.0.6.4"
+version := "0.0.6.1"
 
 scalaVersion := "2.11.7"
 
@@ -17,8 +17,8 @@ libraryDependencies ++= Seq(
   jacksonScala,
   commonsIo,
   jacksonDatabind,
-  mustache,
-  scalaExtensions,
+  // mustache,
+  // scalaExtensions,
   peregrineServerPlugin
 )
 
