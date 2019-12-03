@@ -13,12 +13,12 @@ class CsrfFilterSpec extends ShouldSpec with FlatSpecHelper {
   })
 
   server.register(testController)
-  server.registerViewRenderer(new ViewRenderer() {
+ /* server.registerViewRenderer(new ViewRenderer() {
     val format = "csrf_test"
     def render(template: String, view: View): String = {
       view.csrfToken.getOrElse("token_not_found")
     }
-  })
+  })*/
   // default behaviour
   object testController extends Controller {
 

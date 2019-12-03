@@ -13,24 +13,24 @@ import com.twitter.finagle.ssl.Ssl
 import com.twitter.server.TwitterServer
 import com.twitter.util.Await
 import com.twitter.conversions.storage._
+import io.peregrine.PeregrineServer.ControllerEntry
+import io.peregrine.plugin.PeregrineServerPlugin
 
-class PeregrineServer
-  extends TwitterServer
-  with ViewsEnabled
-  with PeregrineLogger {
+class PeregrineServer extends TwitterServer with PeregrineLogger {
 
   override lazy val log = logger()
 
-  val controllers:  ControllerCollection = new ControllerCollection
-  var filters:      Seq[Filter[FinagleRequest, FinagleResponse,FinagleRequest, FinagleResponse]] = Seq.empty
-  val pid:          String = ManagementFactory.getRuntimeMXBean.getName.split('@').head
-
+  val controllers: ControllerCollection = new ControllerCollection
+  var filters: Seq[Filter[FinagleRequest, FinagleResponse, FinagleRequest, FinagleResponse]] = Seq.empty
+  val pid: String = ManagementFactory.getRuntimeMXBean.getName.split('@').head
   var secureServer: Option[ListeningServer] = None
-  var server:       Option[ListeningServer] = None
+  var server: Option[ListeningServer]       = None
 
-  def allFilters(baseService: Service[FinagleRequest, FinagleResponse]):
-  Service[FinagleRequest, FinagleResponse] = {
-    filters.foldRight(baseService) { (b,a) => b andThen a }
+  def allFilters(
+      baseService: Service[FinagleRequest, FinagleResponse]): Service[FinagleRequest, FinagleResponse] = {
+    filters.foldRight(baseService) { (b, a) =>
+      b andThen a
+    }
   }
 
   override def loggerFactories = loggingFactories
@@ -40,7 +40,7 @@ class PeregrineServer
     controllers.add(controller)
   }
 
-  def addFilter(filter: Filter[FinagleRequest, FinagleResponse,FinagleRequest, FinagleResponse]) {
+  def addFilter(filter: Filter[FinagleRequest, FinagleResponse, FinagleRequest, FinagleResponse]) {
     filters = filters ++ Seq(filter)
   }
 
@@ -49,7 +49,7 @@ class PeregrineServer
   }
 
   private[this] lazy val service = {
-    val appService    = new AppService(controllers)
+    val appService = new AppService(controllers)
     // val fileService   = new FileService
     val loggingFilter = new LoggingFilter
     val assetsFilter  = new AssetsFilter
@@ -61,15 +61,16 @@ class PeregrineServer
   }
 
   private[this] lazy val codec = {
-    http.Http()
+    http
+      .Http()
       .maxRequestSize(config.maxRequestSize().megabyte)
       .enableTracing(enable = true)
-      .server(ServerCodecConfig("httpserver", new SocketAddress{}))
+      .server(ServerCodecConfig("httpserver", new SocketAddress {}))
       .pipelineFactory
   }
 
   def writePidFile() {
-    val pidFile = new File(config.pidPath())
+    val pidFile       = new File(config.pidPath())
     val pidFileStream = new FileOutputStream(pidFile)
     pidFileStream.write(pid.getBytes)
     pidFileStream.close()
@@ -81,8 +82,8 @@ class PeregrineServer
   }
 
   /**
-   * Allow custom TLS configuration
-   */
+    * Allow custom TLS configuration
+    */
   def tlsConfig: Option[Netty3ListenerTLSConfig] = {
     if (!config.certificatePath().isEmpty && !config.keyPath().isEmpty) {
       if (!new File(config.certificatePath()).canRead) {
@@ -96,7 +97,8 @@ class PeregrineServer
         throw e
       }
 
-      Some(Netty3ListenerTLSConfig(() => Ssl.server(config.certificatePath(), config.keyPath(), null, null, null)))
+      Some(Netty3ListenerTLSConfig(() =>
+                Ssl.server(config.certificatePath(), config.keyPath(), null, null, null)))
     } else {
       None
     }
@@ -105,28 +107,36 @@ class PeregrineServer
   def startSecureServer() {
     tlsConfig.foreach { conf =>
       object HttpsListener extends Netty3Listener[Any, Any]("https", codec, tlsConfig = Some(conf))
-      object HttpsServer extends DefaultServer[FinagleRequest, FinagleResponse, Any, Any](
-        "https", HttpsListener, new HttpServerDispatcher(_, _)
-      )
-      printf(">> Listening [HTTPS] on 0.0.0.0%s%s%s%n",
-        ANSI_YELLOW, config.sslPort(), ANSI_RESET)
+      object HttpsServer
+          extends DefaultServer[FinagleRequest, FinagleResponse, Any, Any](
+              "https",
+              HttpsListener,
+              new HttpServerDispatcher(_, _)
+          )
+      printf(">> Listening [HTTPS] on 0.0.0.0%s%s%s%n", ANSI_YELLOW, config.sslPort(), ANSI_RESET)
       secureServer = Some(HttpsServer.serve(config.sslPort(), service))
     }
   }
 
   def startHttpServer() {
     object HttpListener extends Netty3Listener[Any, Any]("http", codec)
-    object HttpServer extends DefaultServer[FinagleRequest, FinagleResponse, Any, Any](
-      "http", HttpListener, new HttpServerDispatcher(_, _)
-    )
-    printf(">> Listening on 0.0.0.0%s%s%s%n",
-      ANSI_YELLOW, config.port(), ANSI_RESET)
+    object HttpServer
+        extends DefaultServer[FinagleRequest, FinagleResponse, Any, Any](
+            "http",
+            HttpListener,
+            new HttpServerDispatcher(_, _)
+        )
+    printf(">> Listening on 0.0.0.0%s%s%s%n", ANSI_YELLOW, config.port(), ANSI_RESET)
     server = Some(HttpServer.serve(config.port(), service))
   }
 
   def stop() {
-    server map { _.close() }
-    secureServer map { _.close() }
+    server map {
+      _.close()
+    }
+    secureServer map {
+      _.close()
+    }
   }
 
   onExit {
@@ -136,7 +146,11 @@ class PeregrineServer
 
   def start() {
     printf("%n== Peregringe has taken off for %s%s%s with pid %s%s%n",
-      ANSI_BLUE, config.env(), ANSI_RESET, pid, ANSI_RESET)
+           ANSI_BLUE,
+           config.env(),
+           ANSI_RESET,
+           pid,
+           ANSI_RESET)
 
     if (!config.pidPath().isEmpty) {
       writePidFile()
@@ -144,14 +158,44 @@ class PeregrineServer
 
     if (!config.port().isEmpty) {
       startHttpServer()
-
     }
 
     if (!config.sslPort().isEmpty) {
       startSecureServer()
     }
 
-    server       map { Await.ready(_) }
-    secureServer map { Await.ready(_) }
+    server map {
+      Await.ready(_)
+    }
+    secureServer map {
+      Await.ready(_)
+    }
   }
+}
+
+abstract class PluggablePeregrineServer extends PeregrineServer with PeregrineServerPlugin {
+
+  def registerAll(controllers: Seq[ControllerEntry]): Unit = {
+    println(s"controllers $controllers")
+    controllers.foreach(ce => {
+      println(s"registering $ce")
+      register(ce.controller, ce.prefix)
+    })
+  }
+
+  override def main() = {
+    onServerInit()
+    super.main()
+  }
+}
+
+object PeregrineServer {
+
+  case class ControllerEntry(controller: Controller, prefix: String = "")
+
+  implicit class CallRegister(controller: Seq[(Controller, String)]) {
+    def >>>(registerProxy: (Seq[ControllerEntry] => Unit)): Unit =
+      registerProxy(controller.map(x => ControllerEntry(x._1, x._2)))
+  }
+
 }

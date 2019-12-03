@@ -245,33 +245,7 @@ object MyPrefixServer extends PeregrineApp {
 }
 ```
 
-## Templates
-Peregrine supports mustache templates system. By default, this will look into `views` folder for the template resources
 
-you have a template like:
-```html
-<!-- views/user.mustache -->
-<h1>Hello {{model.name}} you're {{model.age}}</h1>
-```
-
-and render it using the method `mustache`:
-```scala
-User(name: String, age: Int)
-get("/view") { req =>
-  mustache("user", User("Matt", 16))
-}
-```
-
-this will output:
-```html
-<h1>Hello Matt you're 16</h1>
-```
-
-As you can see peregrine exposes the value with the name `model` within the templates, so it's possible to
-access those values using `{{model.name}}`
-
-
-**Note:** Mustache is natively supported through [Mustache.java](https://github.com/spullara/mustache.java).
 
 ## Futures
 
@@ -390,39 +364,6 @@ get("/api/thing") { request =>
 ```
 
 
-
-
-<!-- # Templates
-
-Mustache is natively supported through [Mustache.java](https://github.com/spullara/mustache.java). First a `[View](https://github.com/twitter/peregrine/blob/1.5.3/src/main/scala/com/twitter/peregrine/View.scala)` class must be defined:
-
-```scala
-class MyView extends View {
-  val template = "my_view.mustache"
-  val some_val = "random value here"
-}
-
-```
-
-By default, this will look in `src/main/resources/templates/my_view.mustache` for the template source, which could be:
-
-```scala
- <h1>Some value is {{some_val}}</h1>
-
-```
-
-Then `render.view` can be used to display it:
-
-```scala
-get("/template") { request =>
-  val myView = new MyView
-  render.view(myView)
-}
-```
-
-You can imagine more complex views taking constructor arguments and doing things conditionally from request input.
-
- -->
 
 
 ## Assets

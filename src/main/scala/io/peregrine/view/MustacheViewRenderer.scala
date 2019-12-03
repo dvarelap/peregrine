@@ -3,11 +3,11 @@ package io.peregrine.view
 import io.peregrine._
 import com.github.mustachejava._
 import com.google.common.base.Charsets
-import com.twitter.mustache._
 import com.twitter.util._
 import java.io._
 import java.util.concurrent.Executors
 
+/*
 
 class PeregrineMustacheFactory(templatePath: String)
   extends DefaultMustacheFactory(templatePath) {
@@ -17,7 +17,9 @@ class PeregrineMustacheFactory(templatePath: String)
     templateCache.clear()
   }
 }
+*/
 
+/*
 private[peregrine] object MustacheViewFactoryHolder {
   val templatePath  = config.templatePath()
   lazy val factory  = new PeregrineMustacheFactory(templatePath)
@@ -25,7 +27,9 @@ private[peregrine] object MustacheViewFactoryHolder {
   factory.setObjectHandler(new ScalaObjectHandler())
   factory.setExecutorService(Executors.newCachedThreadPool)
 }
+*/
 
+/*
 trait MustacheViewRenderer extends ViewRenderer {
 
   val format = "mustache"
@@ -67,3 +71,4 @@ trait MustacheViewRenderer extends ViewRenderer {
 }
 
 object MustacheViewRenderer extends MustacheViewRenderer
+*/
